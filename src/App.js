@@ -1,4 +1,5 @@
 import './App.css';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
         <h1>AltOps Workshop</h1>
         <p>Welcome to the React Application</p>
       </header>
+      <SpeedInsights />
     </div>
   );
 }
