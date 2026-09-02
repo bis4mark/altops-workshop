@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import Nav from "./components/Nav";
+import Home from "./components/Home";
+import Services from "./components/Services";
+import About from "./components/About";
+import Contact from "./components/Contact";
 import Workshop from "./components/Workshop";
 import JobEditor from "./components/JobEditor";
 import Portfolio from "./components/Portfolio";
@@ -18,7 +22,7 @@ import {
 const byNewest = (a, b) => b.createdAt - a.createdAt;
 
 export default function App() {
-  const [view, setView] = useState("workshop");
+  const [view, setView] = useState("home");
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
@@ -133,6 +137,14 @@ export default function App() {
             onDelete={deleteJob}
             setLightbox={setLightbox}
           />
+        ) : view === "home" ? (
+          <Home settings={settings} jobs={jobs} onView={setView} />
+        ) : view === "services" ? (
+          <Services onView={setView} />
+        ) : view === "about" ? (
+          <About settings={settings} jobs={jobs} />
+        ) : view === "contact" ? (
+          <Contact settings={settings} />
         ) : view === "workshop" ? (
           <Workshop
             stats={stats}
@@ -150,7 +162,7 @@ export default function App() {
             jobs={jobs.filter((j) => j.portfolio)}
             settings={settings}
             setLightbox={setLightbox}
-            onGoWorkshop={() => setView("workshop")}
+            onView={setView}
           />
         )}
       </div>

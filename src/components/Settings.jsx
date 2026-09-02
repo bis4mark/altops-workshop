@@ -12,7 +12,7 @@ export default function Settings({ settings, onSave, onClose, onClearAll }) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="glass w-full max-w-[420px] rounded-xl p-5"
+        className="glass max-h-[88vh] w-full max-w-[420px] overflow-auto rounded-xl p-5"
       >
         <h2 className="mb-3.5 font-display text-xl font-extrabold">Business details</h2>
         <div className="flex flex-col gap-3">
@@ -27,6 +27,13 @@ export default function Settings({ settings, onSave, onClose, onClearAll }) {
           </Field>
           <Field label="Phone">
             <input className={inputCls} value={draft.phone} onChange={(e) => up("phone", e.target.value)} />
+          </Field>
+          <Field label="About the workshop">
+            <textarea
+              className={`${inputCls} min-h-[90px]`}
+              value={draft.about || ""}
+              onChange={(e) => up("about", e.target.value)}
+            />
           </Field>
         </div>
         <div className="mt-4 flex items-center justify-between">

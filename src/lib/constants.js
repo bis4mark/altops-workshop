@@ -60,4 +60,15 @@ export const DEFAULT_SETTINGS = {
   tagline: "Custom cabinets, counters & fitted furniture",
   location: "Near Asafo Labour R.D, Kumasi",
   phone: "0244622461",
+  about:
+    "A Kumasi workshop building fitted kitchens, wardrobes, reception counters and " +
+    "office furniture to order. Every piece is measured on site, cut from your choice " +
+    "of board or solid timber, and finished in the workshop before it goes in.",
+};
+
+/** Ghana mobile -> wa.me link. 0244622461 -> https://wa.me/233244622461 */
+export const whatsappLink = (phone) => {
+  const digits = String(phone || "").replace(/\D/g, "");
+  const intl = digits.startsWith("0") ? "233" + digits.slice(1) : digits;
+  return intl ? `https://wa.me/${intl}` : null;
 };

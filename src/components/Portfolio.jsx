@@ -1,9 +1,9 @@
-export default function Portfolio({ jobs, settings, setLightbox, onGoWorkshop }) {
+export default function Portfolio({ jobs, settings, setLightbox, onView }) {
   return (
     <div>
       <div className="mb-[22px] glass-dark rounded-2xl px-6 py-8 text-center text-cream">
-        <div className="text-xs font-bold tracking-[0.22em] text-oak">HANDMADE FURNITURE</div>
-        <h1 className="my-1.5 font-display text-[34px] font-extrabold">{settings.business}</h1>
+        <div className="text-xs font-bold tracking-[0.22em] text-oak">GALLERY</div>
+        <h1 className="my-1.5 font-display text-[34px] font-extrabold">Recent work</h1>
         <p className="mx-auto max-w-[520px] text-cream/80">{settings.tagline}</p>
         <div className="mt-2 text-[13px] text-cream/60">
           {settings.location}
@@ -13,12 +13,12 @@ export default function Portfolio({ jobs, settings, setLightbox, onGoWorkshop })
 
       {jobs.length === 0 ? (
         <div className="rounded-xl glass border-dashed px-4 py-10 text-center">
-          <div className="font-bold text-ink">Your portfolio is empty</div>
+          <div className="font-bold text-ink">Nothing in the gallery yet</div>
           <div className="mt-1 text-sm text-ink-soft">
-            Open a job, add photos, and tick “Show in portfolio.”
+            In the Workshop, open a job, add photos, and tick “Show in portfolio.”
           </div>
           <button
-            onClick={onGoWorkshop}
+            onClick={() => onView("workshop")}
             className="mt-3 rounded-lg bg-oak px-4 py-2.5 font-bold text-esp"
           >
             Go to Workshop
