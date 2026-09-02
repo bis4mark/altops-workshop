@@ -93,8 +93,8 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
     <div>
       {!cam ? (
         <>
-          <div className="mb-3 rounded-[10px] glass p-3.5">
-            <div className="mb-2 text-xs text-ink-soft">
+          <div className="mb-3 rounded-[10px] card p-3.5">
+            <div className="mb-2 text-xs text-ink-2">
               Place a reference object beside the wood so the AI can estimate real size.
             </div>
             <div className="flex flex-wrap items-center gap-1.5">
@@ -103,7 +103,7 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
                   key={r}
                   onClick={() => setRef(r)}
                   className={`rounded-lg border px-2.5 py-1.5 text-xs text-ink backdrop-blur transition-colors ${
-                    ref === r ? "border-oak bg-oak/20" : "border-white/40 bg-white/40"
+                    ref === r ? "border-amber bg-amber/20" : "border-line bg-surface"
                   }`}
                 >
                   {r}
@@ -124,14 +124,14 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
             <button
               onClick={startCam}
               disabled={busy}
-              className="flex-1 rounded-lg bg-esp p-3 font-semibold text-cream disabled:opacity-50"
+              className="flex-1 rounded-lg bg-ink p-3 font-semibold text-white disabled:opacity-50"
             >
               Open camera
             </button>
             <button
               onClick={() => fileRef.current && fileRef.current.click()}
               disabled={busy}
-              className="flex-1 rounded-lg border border-oak p-3 font-semibold text-oak disabled:opacity-50"
+              className="flex-1 rounded-lg border border-amber p-3 font-semibold text-amber disabled:opacity-50"
             >
               Upload photo (JPEG/PNG)
             </button>
@@ -153,7 +153,7 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
             muted
             className="block max-h-[60vh] w-full object-cover"
           />
-          <div className="pointer-events-none absolute inset-[10%] rounded-lg border-2 border-dashed border-oak/60" />
+          <div className="pointer-events-none absolute inset-[10%] rounded-lg border-2 border-dashed border-amber/60" />
           <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/80 to-transparent p-3.5">
             <button
               onClick={stopCam}
@@ -164,7 +164,7 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
             <button
               onClick={capture}
               aria-label="Take photo"
-              className="h-[62px] w-[62px] rounded-full border-4 border-white bg-oak"
+              className="h-[62px] w-[62px] rounded-full border-4 border-white bg-amber"
             />
             <span className="w-[60px]" />
           </div>
@@ -174,14 +174,14 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
       <canvas ref={canvasRef} className="hidden" />
 
       {busy && (
-        <div className="p-4 text-center font-semibold text-oak">Analyzing dimensions…</div>
+        <div className="p-4 text-center font-semibold text-amber">Analyzing dimensions…</div>
       )}
       {err && (
-        <div className="mb-3 rounded-lg bg-danger/10 p-3 text-[13px] text-danger-soft">{err}</div>
+        <div className="mb-3 rounded-lg bg-alert/10 p-3 text-[13px] text-alert">{err}</div>
       )}
 
       {(j.measurements || []).map((m) => (
-        <div key={m.id} className="mb-2.5 rounded-[10px] glass p-3">
+        <div key={m.id} className="mb-2.5 rounded-[10px] card p-3">
           <div className="flex gap-3">
             <img
               src={m.image}
@@ -195,29 +195,29 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
                   {m.result.total_boards} board(s) · {m.result.confidence} confidence
                   {m.result.reference_detected === false ? " · reference unclear" : ""}
                 </span>
-                <span className="text-[11px] text-ink-soft">{m.date}</span>
+                <span className="text-[11px] text-ink-2">{m.date}</span>
               </div>
               {(m.result.items || []).map((it, i) => (
                 <div key={i} className="mt-1.5 text-[13px]">
                   <div className="font-semibold text-ink">
                     {it.label}{" "}
-                    <span className="font-mono text-ink-soft">
+                    <span className="font-mono text-ink-2">
                       {it.length_cm}×{it.width_cm}×{it.thickness_cm} cm
                     </span>
                   </div>
-                  <div className="text-[11px] text-ink-soft">
+                  <div className="text-[11px] text-ink-2">
                     {it.material_guess} · {it.condition}
                   </div>
                   <button
                     onClick={() => onUseDims(it)}
-                    className="mt-1 text-[11px] font-bold text-oak"
+                    className="mt-1 text-[11px] font-bold text-amber"
                   >
                     Use as job dimensions →
                   </button>
                 </div>
               ))}
               {m.result.recommended_product && (
-                <div className="mt-1 text-[11px] text-oak">
+                <div className="mt-1 text-[11px] text-amber">
                   Best for: {m.result.recommended_product}
                 </div>
               )}

@@ -1,48 +1,55 @@
 /* Per-browser persistence via localStorage. Jobs are one key each
-   (`wjob_<id>`); settings are a single `wsettings` blob. */
+   (`wjob_<id>`); other collections use the generic helpers below. */
 
-const hasStore = typeof window !== "undefined" && !!window.localStorage;
+const has = typeof window !== "undefined" && !!window.localStorage;
 
-export async function loadJobs() {
-  if (!hasStore) return [];
+function readPrefix(prefix) {
+  if (!has) return [];
   const out = [];
-  try {
-    for (let i = 0; i < localStorage.length; i += 1) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith("wjob_")) {
-        try {
-          out.push(JSON.parse(localStorage.getItem(key)));
-        } catch {
-          /* skip a corrupt entry */
-        }
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(prefix)) {
+      try {
+        out.push(JSON.parse(localStorage.getItem(key)));
+      } catch {
+        /* skip a corrupt entry */
       }
     }
-  } catch {
-    return [];
   }
   return out;
 }
 
-export async function persistJob(job) {
-  if (!hasStore) return;
+const safeSet = (key, value) => {
+  if (!has) return;
   try {
-    localStorage.setItem("wjob_" + job.id, JSON.stringify(job));
+    localStorage.setItem(key, JSON.stringify(value));
   } catch {
     /* quota — nothing we can do here */
   }
-}
-
-export async function removeJob(id) {
-  if (!hasStore) return;
+};
+const safeDel = (key) => {
+  if (!has) return;
   try {
-    localStorage.removeItem("wjob_" + id);
+    localStorage.removeItem(key);
   } catch {
     /* ignore */
   }
-}
+};
 
+/* ── jobs ── */
+export const loadJobs = async () => readPrefix("wjob_");
+export const persistJob = async (job) => safeSet("wjob_" + job.id, job);
+export const removeJob = async (id) => safeDel("wjob_" + id);
+
+/* ── generic collections: lumber, consumables, timecards, reservations ── */
+export const loadCollection = async (prefix) => readPrefix(prefix);
+export const persistItem = async (prefix, item) => safeSet(prefix + item.id, item);
+export const removeItem = async (prefix, id) => safeDel(prefix + id);
+export const persistMany = async (prefix, items) => items.forEach((it) => safeSet(prefix + it.id, it));
+
+/* ── settings ── */
 export async function loadSettings() {
-  if (!hasStore) return null;
+  if (!has) return null;
   try {
     const raw = localStorage.getItem("wsettings");
     return raw ? JSON.parse(raw) : null;
@@ -50,12 +57,17 @@ export async function loadSettings() {
     return null;
   }
 }
+export const persistSettings = async (s) => safeSet("wsettings", s);
 
-export async function persistSettings(settings) {
-  if (!hasStore) return;
-  try {
-    localStorage.setItem("wsettings", JSON.stringify(settings));
-  } catch {
-    /* ignore */
-  }
-}
+export const flag = {
+  get: (name) => (has ? localStorage.getItem("wflag_" + name) : null),
+  set: (name, v) => {
+    if (has) {
+      try {
+        localStorage.setItem("wflag_" + name, String(v));
+      } catch {
+        /* ignore */
+      }
+    }
+  },
+};

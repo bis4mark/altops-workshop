@@ -1,61 +1,63 @@
 import { useState } from "react";
+import Modal from "./ui/Modal";
 import { Field, inputCls } from "./primitives";
 
-export default function Settings({ settings, onSave, onClose, onClearAll }) {
+export default function Settings({ open, settings, onSave, onClose, onClearAll }) {
   const [draft, setDraft] = useState(settings);
   const up = (key, value) => setDraft((s) => ({ ...s, [key]: value }));
 
+  const save = () => {
+    onSave(draft);
+    onClose();
+  };
+
   return (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-40 flex items-center justify-center bg-black/50 p-4"
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="glass max-h-[88vh] w-full max-w-[420px] overflow-auto rounded-xl p-5"
-      >
-        <h2 className="mb-3.5 font-display text-xl font-extrabold">Business details</h2>
-        <div className="flex flex-col gap-3">
-          <Field label="Business name">
-            <input className={inputCls} value={draft.business} onChange={(e) => up("business", e.target.value)} />
-          </Field>
-          <Field label="Tagline">
-            <input className={inputCls} value={draft.tagline} onChange={(e) => up("tagline", e.target.value)} />
-          </Field>
-          <Field label="Location">
-            <input className={inputCls} value={draft.location} onChange={(e) => up("location", e.target.value)} />
-          </Field>
-          <Field label="Phone">
-            <input className={inputCls} value={draft.phone} onChange={(e) => up("phone", e.target.value)} />
-          </Field>
-          <Field label="About the workshop">
-            <textarea
-              className={`${inputCls} min-h-[90px]`}
-              value={draft.about || ""}
-              onChange={(e) => up("about", e.target.value)}
-            />
-          </Field>
-        </div>
-        <div className="mt-4 flex items-center justify-between">
+    <Modal
+      open={open}
+      title="Business settings"
+      onClose={onClose}
+      footer={
+        <>
           <button
             onClick={() => {
-              if (window.confirm("Delete ALL jobs? This cannot be undone.")) onClearAll();
+              if (window.confirm("Delete every job? This cannot be undone.")) onClearAll();
             }}
-            className="text-[13px] text-danger"
+            className="mr-auto text-[13px] text-alert hover:underline"
           >
-            Clear all data
+            Clear all jobs
           </button>
-          <button
-            onClick={() => {
-              onSave(draft);
-              onClose();
-            }}
-            className="rounded-lg bg-esp px-4 py-2.5 font-semibold text-cream"
-          >
+          <button onClick={onClose} className="btn">
+            Cancel
+          </button>
+          <button onClick={save} className="btn btn-amber">
             Save
           </button>
-        </div>
+        </>
+      }
+    >
+      <div className="flex flex-col gap-3">
+        <Field label="Business name">
+          <input className={inputCls} value={draft.business} onChange={(e) => up("business", e.target.value)} />
+        </Field>
+        <Field label="Tagline">
+          <input className={inputCls} value={draft.tagline} onChange={(e) => up("tagline", e.target.value)} />
+        </Field>
+        <Field label="Location">
+          <input className={inputCls} value={draft.location} onChange={(e) => up("location", e.target.value)} />
+        </Field>
+        <Field label="Phone">
+          <input className={inputCls} value={draft.phone} onChange={(e) => up("phone", e.target.value)} />
+        </Field>
+        <Field label="Shop floor capacity (concurrent builds)">
+          <input
+            type="number"
+            min="1"
+            className={inputCls}
+            value={draft.capacity}
+            onChange={(e) => up("capacity", Math.max(1, parseInt(e.target.value, 10) || 1))}
+          />
+        </Field>
       </div>
-    </div>
+    </Modal>
   );
 }

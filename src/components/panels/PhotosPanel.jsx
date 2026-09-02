@@ -27,7 +27,7 @@ export default function PhotosPanel({ j, setJ, setLightbox }) {
         <button
           onClick={() => fileRef.current && fileRef.current.click()}
           disabled={busy || photos.length >= 8}
-          className="text-[13px] font-semibold text-oak disabled:opacity-50"
+          className="text-[13px] font-semibold text-amber disabled:opacity-50"
         >
           {busy ? "Adding…" : "+ Add photos"}
         </button>
@@ -51,14 +51,14 @@ export default function PhotosPanel({ j, setJ, setLightbox }) {
             />
             <button
               onClick={() => setJ((x) => ({ ...x, photos: x.photos.filter((_, k) => k !== i) }))}
-              className="absolute -right-1.5 -top-1.5 h-5 w-5 rounded-full bg-danger text-xs text-white"
+              className="absolute -right-1.5 -top-1.5 h-5 w-5 rounded-full bg-alert text-xs text-white"
             >
               ✕
             </button>
           </div>
         ))}
       </div>
-      <div className="mt-2 text-xs text-ink-soft">
+      <div className="mt-2 text-xs text-ink-2">
         Tip: tick “Show in portfolio” on the Details tab to feature this build publicly.
       </div>
     </div>

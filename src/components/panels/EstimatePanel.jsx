@@ -133,7 +133,7 @@ export default function EstimatePanel({ j, patch, settings }) {
         </Field>
       </div>
 
-      <div className="mt-3.5 rounded-[10px] border border-oak/50 bg-oak/10 p-3.5 backdrop-blur-md">
+      <div className="mt-3.5 rounded-[10px] border border-amber/50 bg-amber/10 p-3.5 backdrop-blur-md">
         <div className="flex items-center justify-between text-sm text-ink">
           <span>Wood material</span>
           <span>{money(woodCost)}</span>
@@ -142,12 +142,12 @@ export default function EstimatePanel({ j, patch, settings }) {
           <span>Other charges</span>
           <span>{money(subtotal - woodCost)}</span>
         </div>
-        <div className="mt-2 flex items-center justify-between border-t border-oak pt-2 font-display text-lg font-extrabold text-ink">
+        <div className="mt-2 flex items-center justify-between border-t border-amber pt-2 text-lg font-extrabold text-ink">
           <span>Grand total</span>
           <span>{money(subtotal)}</span>
         </div>
         {+advance > 0 && (
-          <div className={`mt-1 flex items-center justify-between text-sm ${balance < 0 ? "text-danger" : "text-done"}`}>
+          <div className={`mt-1 flex items-center justify-between text-sm ${balance < 0 ? "text-alert" : "text-ok"}`}>
             <span>Balance B/Forward</span>
             <span>{money(balance)}</span>
           </div>
@@ -157,19 +157,19 @@ export default function EstimatePanel({ j, patch, settings }) {
       <div className="no-print mt-3 flex flex-wrap gap-2">
         <button
           onClick={() => patch({ price: String(subtotal), deposit: String(advance), estimate: estimate() })}
-          className="rounded-lg bg-esp px-4 py-2.5 font-semibold text-cream"
+          className="rounded-lg bg-ink px-4 py-2.5 font-semibold text-white"
         >
           Apply price to job
         </button>
         <button
           onClick={() => patch({ estimate: estimate() })}
-          className="rounded-lg border border-oak px-4 py-2.5 font-semibold text-oak"
+          className="rounded-lg border border-amber px-4 py-2.5 font-semibold text-amber"
         >
           Save estimate
         </button>
         <button
           onClick={() => setInvoice((v) => !v)}
-          className="rounded-lg bg-oak px-4 py-2.5 font-bold text-esp"
+          className="rounded-lg bg-amber px-4 py-2.5 font-bold text-ink"
         >
           {invoice ? "Hide invoice" : "Generate invoice"}
         </button>
@@ -178,7 +178,7 @@ export default function EstimatePanel({ j, patch, settings }) {
       {invoice && (
         <div className="mt-3.5 rounded-lg border border-line bg-white px-6 py-7 text-black">
           <div className="mb-3 border-b-2 border-black pb-3 text-center">
-            <div className="font-display text-xl font-bold tracking-wide">
+            <div className="text-xl font-bold tracking-wide">
               {settings.business.toUpperCase()}
             </div>
             <div className="mt-1 text-xs">
@@ -242,7 +242,7 @@ export default function EstimatePanel({ j, patch, settings }) {
           <div className="no-print mt-4 text-center">
             <button
               onClick={() => window.print()}
-              className="rounded-md bg-esp px-6 py-2.5 text-oak"
+              className="rounded-md bg-ink px-6 py-2.5 text-amber"
             >
               Print / Save as PDF
             </button>

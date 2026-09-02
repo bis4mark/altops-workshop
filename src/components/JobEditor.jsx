@@ -32,23 +32,16 @@ export default function JobEditor({ job, settings, onSave, onPatch, onCancel, on
   };
 
   return (
-    <div className="rounded-xl glass p-[18px]">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-display text-xl font-extrabold">{j.title || "New job"}</h2>
-        <button onClick={onCancel} className="text-ink-soft">
-          ✕ Close
-        </button>
-      </div>
-
-      <div className="no-print mb-4 flex flex-wrap gap-1 border-b border-line pb-2">
+    <div className="flex h-full flex-col">
+      <div className="no-print flex flex-wrap gap-1 border-b border-line pb-2">
         {TABS.map(([key, label]) => {
           const done = isDone(key, j) && tab !== key;
           return (
             <button
               key={key}
               onClick={() => setTab(key)}
-              className={`rounded-lg px-3 py-1.5 text-[13px] font-semibold transition-colors ${
-                tab === key ? "bg-esp text-cream" : "text-ink hover:bg-white/50"
+              className={`rounded-md px-3 py-1.5 text-[13px] font-semibold transition-colors ${
+                tab === key ? "bg-ink text-white" : "text-ink hover:bg-sunk"
               }`}
             >
               {label}
@@ -58,40 +51,36 @@ export default function JobEditor({ job, settings, onSave, onPatch, onCancel, on
         })}
       </div>
 
-      {tab === "details" && <DetailsPanel j={j} up={up} />}
-      {tab === "measure" && (
-        <MeasurePanel
-          j={j}
-          patch={patch}
-          setLightbox={setLightbox}
-          onUseDims={(m) => {
-            patch({
-              W: String(Math.round(m.length_cm * 10)),
-              H: String(Math.round(m.width_cm * 10)),
-            });
-            setTab("details");
-          }}
-        />
-      )}
-      {tab === "estimate" && <EstimatePanel j={j} patch={patch} settings={settings} />}
-      {tab === "plan" && <PlanPanel j={j} patch={patch} />}
-      {tab === "photos" && <PhotosPanel j={j} setJ={setJ} setLightbox={setLightbox} />}
+      <div className="min-h-0 flex-1 overflow-auto py-4">
+        {tab === "details" && <DetailsPanel j={j} up={up} />}
+        {tab === "measure" && (
+          <MeasurePanel
+            j={j}
+            patch={patch}
+            setLightbox={setLightbox}
+            onUseDims={(m) => {
+              patch({
+                W: String(Math.round(m.length_cm * 10)),
+                H: String(Math.round(m.width_cm * 10)),
+              });
+              setTab("details");
+            }}
+          />
+        )}
+        {tab === "estimate" && <EstimatePanel j={j} patch={patch} settings={settings} />}
+        {tab === "plan" && <PlanPanel j={j} patch={patch} />}
+        {tab === "photos" && <PhotosPanel j={j} setJ={setJ} setLightbox={setLightbox} />}
+      </div>
 
-      <div className="no-print mt-4 flex items-center justify-between border-t border-line pt-3.5">
-        <button onClick={() => onDelete(j.id)} className="text-sm text-danger">
+      <div className="no-print flex shrink-0 items-center justify-between border-t border-line pt-3">
+        <button onClick={() => onDelete(j.id)} className="text-sm text-alert hover:underline">
           Delete job
         </button>
         <div className="flex gap-2">
-          <button
-            onClick={onCancel}
-            className="rounded-lg glass px-4 py-2.5 text-ink"
-          >
+          <button onClick={onCancel} className="btn">
             Cancel
           </button>
-          <button
-            onClick={() => onSave(j)}
-            className="rounded-lg bg-esp px-4 py-2.5 font-semibold text-cream"
-          >
+          <button onClick={() => onSave(j)} className="btn btn-amber">
             Save job
           </button>
         </div>

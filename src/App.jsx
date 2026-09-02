@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
-import Nav from "./components/Nav";
-import Home from "./components/Home";
-import Services from "./components/Services";
-import About from "./components/About";
-import Contact from "./components/Contact";
-import Workshop from "./components/Workshop";
+import Sidebar from "./components/Sidebar";
+import Topbar from "./components/Topbar";
+import Dashboard from "./components/Dashboard";
+import Pipeline from "./components/Pipeline";
+import Inventory from "./components/Inventory";
+import Locker from "./components/Locker";
+import Schedule from "./components/Schedule";
+import Financials from "./components/Financials";
+import Drawer from "./components/ui/Drawer";
 import JobEditor from "./components/JobEditor";
-import Portfolio from "./components/Portfolio";
-import Lightbox from "./components/Lightbox";
 import Settings from "./components/Settings";
-import { DEFAULT_SETTINGS } from "./lib/constants";
+import Lightbox from "./components/Lightbox";
+import { Skeleton } from "./components/ui/widgets";
+import { DEFAULT_SETTINGS, STATUS_TO_STAGE } from "./lib/constants";
 import { emptyJob } from "./lib/format";
+import { seedIfEmpty } from "./lib/seed";
 import {
+  loadCollection,
   loadJobs,
   loadSettings,
   persistJob,
@@ -20,23 +25,26 @@ import {
 } from "./lib/storage";
 
 const byNewest = (a, b) => b.createdAt - a.createdAt;
+const migrate = (j) => ({ ...j, stage: j.stage || STATUS_TO_STAGE[j.status] || "deposit" });
 
 export default function App() {
-  const [view, setView] = useState("home");
+  const [view, setView] = useState("dashboard");
   const [jobs, setJobs] = useState([]);
+  const [lumber, setLumber] = useState([]);
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
-  const [filter, setFilter] = useState("all");
-  const [query, setQuery] = useState("");
-  const [lightbox, setLightbox] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
-  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const [mobileNav, setMobileNav] = useState(false);
+  const [lightbox, setLightbox] = useState(null);
 
   useEffect(() => {
     (async () => {
-      const [loadedJobs, savedSettings] = await Promise.all([loadJobs(), loadSettings()]);
-      setJobs(loadedJobs.sort(byNewest));
-      if (savedSettings) setSettings(savedSettings);
+      await seedIfEmpty();
+      const [j, saved, lm] = await Promise.all([loadJobs(), loadSettings(), loadCollection("wlumber_")]);
+      setJobs(j.map(migrate).sort(byNewest));
+      setLumber(lm);
+      if (saved) setSettings({ ...DEFAULT_SETTINGS, ...saved });
       setLoading(false);
     })();
   }, []);
@@ -48,86 +56,84 @@ export default function App() {
       return next.sort(byNewest);
     });
 
-  const saveJob = async (job) => {
-    await persistJob(job);
-    upsert(job);
-    setEditing(null);
-  };
-  const patchJob = async (job) => {
-    await persistJob(job);
-    upsert(job);
-    setEditing(job);
-  };
+  const saveJob = async (job) => { await persistJob(job); upsert(job); setEditing(null); };
+  const patchJob = async (job) => { await persistJob(job); upsert(job); setEditing(job); };
   const deleteJob = async (id) => {
     await removeJob(id);
     setJobs((list) => list.filter((x) => x.id !== id));
     setEditing(null);
   };
-  const saveSettings = async (next) => {
-    setSettings(next);
-    await persistSettings(next);
+  const setStage = async (id, stage) => {
+    const job = jobs.find((x) => x.id === id);
+    if (!job || job.stage === stage) return;
+    const next = { ...job, stage };
+    await persistJob(next);
+    upsert(next);
   };
+  const saveSettings = async (next) => { setSettings(next); await persistSettings(next); };
   const clearAll = async () => {
     await Promise.all(jobs.map((j) => removeJob(j.id)));
     setJobs([]);
     setShowSettings(false);
   };
-  const addSample = () =>
-    saveJob({
-      ...emptyJob(),
-      title: "Reception counter unit",
-      client: "Shop fit-out",
-      type: "Counter / Desk",
-      status: "done",
-      W: "1500",
-      H: "1100",
-      D: "600",
-      material: "18mm melamine + plywood carcass",
-      price: "3200",
-      deposit: "1500",
-      portfolio: true,
-      blurb:
-        "Two-tier reception counter with raised transaction top and lockable base cabinet.",
-    });
 
-  const stats = {
-    total: jobs.length,
-    active: jobs.filter((j) => j.status === "progress").length,
-    value: jobs.reduce((sum, j) => sum + (+j.price || 0), 0),
-    outstanding: jobs
-      .filter((j) => j.status !== "delivered")
-      .reduce((sum, j) => sum + Math.max(0, (+j.price || 0) - (+j.deposit || 0)), 0),
-  };
-
-  const q = query.trim().toLowerCase();
-  const visible = jobs.filter(
-    (j) =>
-      (filter === "all" || j.status === filter) &&
-      (q === "" || (j.title + j.client + j.type).toLowerCase().includes(q)),
-  );
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-cream">
-        Loading your workshop…
-      </div>
-    );
-  }
+  const newJob = () => setEditing(emptyJob());
 
   return (
-    <div className="min-h-screen font-sans text-ink">
-      <Nav
+    <div className="flex min-h-screen">
+      <Sidebar
         business={settings.business}
         view={view}
-        onView={(v) => {
-          setEditing(null);
-          setView(v);
-        }}
+        onView={setView}
         onSettings={() => setShowSettings(true)}
+        mobileOpen={mobileNav}
+        onCloseMobile={() => setMobileNav(false)}
       />
 
-      <div className="mx-auto max-w-[1100px] px-4 py-6">
-        {editing ? (
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Topbar
+          view={view}
+          onMenu={() => setMobileNav(true)}
+          onNewJob={newJob}
+          onClockIn={() => setView("schedule")}
+        />
+
+        <main className="min-h-0 flex-1">
+          {loading ? (
+            <div className="grid grid-cols-1 gap-3 p-4 lg:grid-cols-4 lg:px-6">
+              {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-28 w-full" />)}
+            </div>
+          ) : view === "dashboard" ? (
+            <Dashboard
+              jobs={jobs}
+              lumber={lumber}
+              capacity={settings.capacity}
+              onNewJob={newJob}
+              onClockIn={() => setView("schedule")}
+              onOpen={setEditing}
+              onView={setView}
+            />
+          ) : view === "pipeline" ? (
+            <Pipeline jobs={jobs} onOpen={setEditing} onStage={setStage} onNewJob={newJob} />
+          ) : view === "inventory" ? (
+            <Inventory />
+          ) : view === "locker" ? (
+            <Locker jobs={jobs} onOpen={setEditing} onNewJob={newJob} />
+          ) : view === "schedule" ? (
+            <Schedule jobs={jobs} />
+          ) : (
+            <Financials jobs={jobs} onOpen={setEditing} />
+          )}
+        </main>
+      </div>
+
+      <Drawer
+        open={!!editing}
+        title={editing ? editing.title || "New commission" : ""}
+        subtitle={editing ? `${editing.type} · ${editing.client || "no client"}` : ""}
+        onClose={() => setEditing(null)}
+      >
+        {editing && (
           <JobEditor
             job={editing}
             settings={settings}
@@ -137,45 +143,18 @@ export default function App() {
             onDelete={deleteJob}
             setLightbox={setLightbox}
           />
-        ) : view === "home" ? (
-          <Home settings={settings} jobs={jobs} onView={setView} />
-        ) : view === "services" ? (
-          <Services onView={setView} />
-        ) : view === "about" ? (
-          <About settings={settings} jobs={jobs} />
-        ) : view === "contact" ? (
-          <Contact settings={settings} />
-        ) : view === "workshop" ? (
-          <Workshop
-            stats={stats}
-            jobs={visible}
-            filter={filter}
-            query={query}
-            onFilter={setFilter}
-            onQuery={setQuery}
-            onNew={() => setEditing(emptyJob())}
-            onOpen={setEditing}
-            onSample={addSample}
-          />
-        ) : (
-          <Portfolio
-            jobs={jobs.filter((j) => j.portfolio)}
-            settings={settings}
-            setLightbox={setLightbox}
-            onView={setView}
-          />
         )}
-      </div>
+      </Drawer>
+
+      <Settings
+        open={showSettings}
+        settings={settings}
+        onSave={saveSettings}
+        onClose={() => setShowSettings(false)}
+        onClearAll={clearAll}
+      />
 
       {lightbox && <Lightbox src={lightbox} onClose={() => setLightbox(null)} />}
-      {showSettings && (
-        <Settings
-          settings={settings}
-          onSave={saveSettings}
-          onClose={() => setShowSettings(false)}
-          onClearAll={clearAll}
-        />
-      )}
     </div>
   );
 }

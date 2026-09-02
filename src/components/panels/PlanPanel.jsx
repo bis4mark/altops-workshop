@@ -2,7 +2,7 @@ import { useState } from "react";
 import { buildPlan } from "../../lib/plan";
 import { Field, inputCls } from "../primitives";
 
-const ith = "border border-esp-2 px-2.5 py-2 text-center text-xs";
+const ith = "border border-line-2 px-2.5 py-2 text-center text-xs";
 const itd = "border-b border-line px-2.5 py-1.5 text-center text-xs";
 
 export default function PlanPanel({ j, patch }) {
@@ -20,7 +20,7 @@ export default function PlanPanel({ j, patch }) {
   return (
     <div>
       {missing && (
-        <div className="mb-3 rounded-lg bg-danger/10 p-3 text-[13px] text-danger-soft">
+        <div className="mb-3 rounded-lg bg-alert/10 p-3 text-[13px] text-alert">
           Set Width and Height on the Details tab first.
         </div>
       )}
@@ -38,7 +38,7 @@ export default function PlanPanel({ j, patch }) {
       <button
         onClick={generate}
         disabled={missing}
-        className="mt-3 rounded-lg bg-esp px-4 py-2.5 font-semibold text-cream disabled:opacity-50"
+        className="mt-3 rounded-lg bg-ink px-4 py-2.5 font-semibold text-white disabled:opacity-50"
       >
         Generate cut plan
       </button>
@@ -47,9 +47,9 @@ export default function PlanPanel({ j, patch }) {
         <div className="mt-3.5">
           <div className="mb-3 flex flex-wrap gap-2">
             {plan.boards.map((b) => (
-              <div key={b.mat} className="rounded-[10px] border border-oak/50 bg-oak/10 px-3.5 py-2.5 backdrop-blur-md">
-                <div className="font-display text-xl font-extrabold text-oak">{b.count}</div>
-                <div className="text-xs text-ink-soft">
+              <div key={b.mat} className="rounded-[10px] border border-amber/50 bg-amber/10 px-3.5 py-2.5 backdrop-blur-md">
+                <div className="text-xl font-extrabold text-amber">{b.count}</div>
+                <div className="text-xs text-ink-2">
                   {b.mat} board{b.count !== 1 ? "s" : ""} (8×4)
                 </div>
               </div>
@@ -57,7 +57,7 @@ export default function PlanPanel({ j, patch }) {
           </div>
           <table className="w-full border-collapse text-[13px]">
             <thead>
-              <tr className="bg-esp text-cream">
+              <tr className="bg-ink text-white">
                 <th className={ith}>Part</th>
                 <th className={ith}>Size (mm)</th>
                 <th className={ith}>Qty</th>
@@ -80,7 +80,7 @@ export default function PlanPanel({ j, patch }) {
           <div className="no-print mt-2.5">
             <button
               onClick={() => window.print()}
-              className="rounded-lg bg-oak px-4 py-2 font-bold text-esp"
+              className="rounded-lg bg-amber px-4 py-2 font-bold text-ink"
             >
               Print cut plan
             </button>
