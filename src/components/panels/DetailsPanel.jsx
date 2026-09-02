@@ -70,7 +70,7 @@ export default function DetailsPanel({ j, up }) {
         />
       </Field>
 
-      <div className="col-span-full rounded-[10px] border border-line bg-panel p-3">
+      <div className="col-span-full rounded-[10px] glass p-3">
         <label className="flex cursor-pointer items-center gap-2">
           <input
             type="checkbox"

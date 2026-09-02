@@ -1,6 +1,6 @@
 export default function EmptyState({ onNew, onSample }) {
   return (
-    <div className="rounded-xl border border-dashed border-line bg-card px-4 py-12 text-center">
+    <div className="rounded-xl glass border-dashed px-4 py-12 text-center">
       <div className="text-4xl text-ink-soft/50">◳</div>
       <div className="mt-1.5 font-bold text-ink">No jobs yet</div>
       <div className="mt-0.5 text-sm text-ink-soft">

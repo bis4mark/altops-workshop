@@ -1,9 +1,7 @@
 import { STATUS } from "../lib/constants";
 
-/** Shared control styling — used by every panel's inputs / selects / textareas. */
-export const inputCls =
-  "w-full rounded-lg border border-line bg-card px-2.5 py-2 text-sm text-ink " +
-  "outline-none transition-colors focus:border-oak";
+/** Shared control class — a frosted input. Defined in index.css. */
+export const inputCls = "field";
 
 const BADGE_BG = {
   quote: "bg-quote",
@@ -14,7 +12,7 @@ const BADGE_BG = {
 
 export function Stat({ value, label, tone = "text-oak" }) {
   return (
-    <div className="rounded-xl border border-line bg-card p-3.5">
+    <div className="glass rounded-xl p-3.5">
       <div className={`font-display text-[22px] font-extrabold ${tone}`}>{value}</div>
       <div className="mt-0.5 text-xs text-ink-soft">{label}</div>
     </div>

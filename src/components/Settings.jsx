@@ -12,7 +12,7 @@ export default function Settings({ settings, onSave, onClose, onClearAll }) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-[420px] rounded-xl bg-card p-5"
+        className="glass w-full max-w-[420px] rounded-xl p-5"
       >
         <h2 className="mb-3.5 font-display text-xl font-extrabold">Business details</h2>
         <div className="flex flex-col gap-3">

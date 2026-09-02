@@ -104,14 +104,14 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-cream text-ink-soft">
+      <div className="flex min-h-screen items-center justify-center text-cream">
         Loading your workshop…
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-cream font-sans text-ink">
+    <div className="min-h-screen font-sans text-ink">
       <Nav
         business={settings.business}
         view={view}

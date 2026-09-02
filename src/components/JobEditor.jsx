@@ -32,7 +32,7 @@ export default function JobEditor({ job, settings, onSave, onPatch, onCancel, on
   };
 
   return (
-    <div className="rounded-xl border border-line bg-card p-[18px]">
+    <div className="rounded-xl glass p-[18px]">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="font-display text-xl font-extrabold">{j.title || "New job"}</h2>
         <button onClick={onCancel} className="text-ink-soft">
@@ -48,7 +48,7 @@ export default function JobEditor({ job, settings, onSave, onPatch, onCancel, on
               key={key}
               onClick={() => setTab(key)}
               className={`rounded-lg px-3 py-1.5 text-[13px] font-semibold transition-colors ${
-                tab === key ? "bg-esp text-cream" : "text-ink hover:bg-panel"
+                tab === key ? "bg-esp text-cream" : "text-ink hover:bg-white/50"
               }`}
             >
               {label}
@@ -84,7 +84,7 @@ export default function JobEditor({ job, settings, onSave, onPatch, onCancel, on
         <div className="flex gap-2">
           <button
             onClick={onCancel}
-            className="rounded-lg border border-line bg-card px-4 py-2.5 text-ink"
+            className="rounded-lg glass px-4 py-2.5 text-ink"
           >
             Cancel
           </button>

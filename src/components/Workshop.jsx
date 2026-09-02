@@ -35,12 +35,12 @@ export default function Workshop({
           value={query}
           onChange={(e) => onQuery(e.target.value)}
           placeholder="Search jobs…"
-          className="min-w-[140px] flex-1 rounded-lg border border-line bg-card px-3 py-2.5 text-sm text-ink outline-none focus:border-oak"
+          className="field min-w-[140px] flex-1"
         />
         <select
           value={filter}
           onChange={(e) => onFilter(e.target.value)}
-          className="rounded-lg border border-line bg-card px-2.5 py-2.5 text-sm text-ink outline-none focus:border-oak"
+          className="field !w-auto"
         >
           <option value="all">All statuses</option>
           {Object.entries(STATUS).map(([key, s]) => (

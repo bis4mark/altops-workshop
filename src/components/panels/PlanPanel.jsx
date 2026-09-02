@@ -47,7 +47,7 @@ export default function PlanPanel({ j, patch }) {
         <div className="mt-3.5">
           <div className="mb-3 flex flex-wrap gap-2">
             {plan.boards.map((b) => (
-              <div key={b.mat} className="rounded-[10px] border border-oak bg-panel px-3.5 py-2.5">
+              <div key={b.mat} className="rounded-[10px] border border-oak/50 bg-oak/10 px-3.5 py-2.5 backdrop-blur-md">
                 <div className="font-display text-xl font-extrabold text-oak">{b.count}</div>
                 <div className="text-xs text-ink-soft">
                   {b.mat} board{b.count !== 1 ? "s" : ""} (8×4)

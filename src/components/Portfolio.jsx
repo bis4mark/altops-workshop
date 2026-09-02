@@ -1,7 +1,7 @@
 export default function Portfolio({ jobs, settings, setLightbox, onGoWorkshop }) {
   return (
     <div>
-      <div className="mb-[22px] rounded-2xl bg-esp px-6 py-8 text-center text-cream">
+      <div className="mb-[22px] glass-dark rounded-2xl px-6 py-8 text-center text-cream">
         <div className="text-xs font-bold tracking-[0.22em] text-oak">HANDMADE FURNITURE</div>
         <h1 className="my-1.5 font-display text-[34px] font-extrabold">{settings.business}</h1>
         <p className="mx-auto max-w-[520px] text-cream/80">{settings.tagline}</p>
@@ -12,7 +12,7 @@ export default function Portfolio({ jobs, settings, setLightbox, onGoWorkshop })
       </div>
 
       {jobs.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-line bg-card px-4 py-10 text-center">
+        <div className="rounded-xl glass border-dashed px-4 py-10 text-center">
           <div className="font-bold text-ink">Your portfolio is empty</div>
           <div className="mt-1 text-sm text-ink-soft">
             Open a job, add photos, and tick “Show in portfolio.”
@@ -30,7 +30,7 @@ export default function Portfolio({ jobs, settings, setLightbox, onGoWorkshop })
             const cover = job.photos && job.photos[0];
             const dims = [job.W, job.D, job.H].filter(Boolean).join(" × ");
             return (
-              <div key={job.id} className="overflow-hidden rounded-xl border border-line bg-card">
+              <div key={job.id} className="overflow-hidden rounded-xl glass">
                 <div
                   onClick={() => cover && setLightbox(cover)}
                   className={`h-[190px] bg-black ${cover ? "cursor-pointer" : ""}`}

@@ -133,7 +133,7 @@ export default function EstimatePanel({ j, patch, settings }) {
         </Field>
       </div>
 
-      <div className="mt-3.5 rounded-[10px] border border-oak bg-panel p-3.5">
+      <div className="mt-3.5 rounded-[10px] border border-oak/50 bg-oak/10 p-3.5 backdrop-blur-md">
         <div className="flex items-center justify-between text-sm text-ink">
           <span>Wood material</span>
           <span>{money(woodCost)}</span>

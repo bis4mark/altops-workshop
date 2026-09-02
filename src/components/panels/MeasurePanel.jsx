@@ -93,7 +93,7 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
     <div>
       {!cam ? (
         <>
-          <div className="mb-3 rounded-[10px] border border-line bg-panel p-3.5">
+          <div className="mb-3 rounded-[10px] glass p-3.5">
             <div className="mb-2 text-xs text-ink-soft">
               Place a reference object beside the wood so the AI can estimate real size.
             </div>
@@ -102,8 +102,8 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
                 <button
                   key={r}
                   onClick={() => setRef(r)}
-                  className={`rounded-lg border px-2.5 py-1.5 text-xs text-ink transition-colors ${
-                    ref === r ? "border-oak bg-oak/15" : "border-line bg-card"
+                  className={`rounded-lg border px-2.5 py-1.5 text-xs text-ink backdrop-blur transition-colors ${
+                    ref === r ? "border-oak bg-oak/20" : "border-white/40 bg-white/40"
                   }`}
                 >
                   {r}
@@ -181,7 +181,7 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
       )}
 
       {(j.measurements || []).map((m) => (
-        <div key={m.id} className="mb-2.5 rounded-[10px] border border-line bg-card p-3">
+        <div key={m.id} className="mb-2.5 rounded-[10px] glass p-3">
           <div className="flex gap-3">
             <img
               src={m.image}

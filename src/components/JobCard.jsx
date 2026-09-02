@@ -8,7 +8,7 @@ export default function JobCard({ job, onOpen }) {
   return (
     <button
       onClick={onOpen}
-      className="w-full overflow-hidden rounded-xl border border-line bg-card text-left"
+      className="w-full overflow-hidden rounded-xl glass text-left"
     >
       <div className="flex h-[130px] items-center justify-center bg-[#efe7d6]">
         {cover ? (

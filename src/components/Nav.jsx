@@ -5,7 +5,7 @@ const TABS = [
 
 export default function Nav({ business, view, onView, onSettings }) {
   return (
-    <header className="bg-esp text-cream">
+    <header className="glass-dark sticky top-0 z-30 text-cream">
       <div className="mx-auto flex max-w-[1100px] flex-wrap items-center justify-between gap-2 px-4 py-3">
         <div className="flex items-center gap-2">
           <span className="inline-block h-3 w-3 rounded-[2px] bg-oak" />
