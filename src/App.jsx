@@ -70,6 +70,23 @@ export default function App() {
     await persistJob(next);
     upsert(next);
   };
+  const recordPayment = async (id, amount, note) => {
+    const job = jobs.find((x) => x.id === id);
+    if (!job || !(+amount)) return;
+    const next = {
+      ...job,
+      payments: [...(job.payments || []), { amount: +amount, at: Date.now(), note: note || "" }],
+    };
+    await persistJob(next);
+    upsert(next);
+  };
+  const addJobPhoto = async (id, dataUrl) => {
+    const job = jobs.find((x) => x.id === id);
+    if (!job) return;
+    const next = { ...job, photos: [...(job.photos || []), dataUrl] };
+    await persistJob(next);
+    upsert(next);
+  };
   const saveSettings = async (next) => { setSettings(next); await persistSettings(next); };
   const clearAll = async () => {
     await Promise.all(jobs.map((j) => removeJob(j.id)));
@@ -118,11 +135,11 @@ export default function App() {
           ) : view === "inventory" ? (
             <Inventory />
           ) : view === "locker" ? (
-            <Locker jobs={jobs} onOpen={setEditing} onNewJob={newJob} />
+            <Locker jobs={jobs} onOpen={setEditing} onNewJob={newJob} onAddPhoto={addJobPhoto} />
           ) : view === "schedule" ? (
             <Schedule jobs={jobs} />
           ) : (
-            <Financials jobs={jobs} onOpen={setEditing} />
+            <Financials jobs={jobs} onOpen={setEditing} onPay={recordPayment} />
           )}
         </main>
       </div>

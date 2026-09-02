@@ -22,6 +22,22 @@ export const daysUntil = (iso) => {
 
 export const jobCode = (job) => "#" + String(job.id || "").replace(/^j/, "").slice(0, 4).toUpperCase();
 
+/** Push a generated file to the browser's downloads. */
+export const download = (name, text, mime = "text/plain") => {
+  const url = URL.createObjectURL(new Blob([text], { type: mime }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+/** Total settled on a job: deposit field + every recorded payment. */
+export const amountPaid = (job) =>
+  (+job.deposit || 0) + (job.payments || []).reduce((s, p) => s + (+p.amount || 0), 0);
+
 export const emptyJob = () => ({
   id: rid(),
   title: "",

@@ -12,10 +12,10 @@ function buildAlerts(jobs, lumber) {
   const out = [];
   for (const j of jobs) {
     const d = daysUntil(j.due);
-    if (d !== null && d < 0) out.push({ tone: "alert", text: `${jobCode(j)} ${j.client} — delivery ${Math.abs(d)}d overdue` });
-    else if (d !== null && d <= 3 && j.stage !== "delivery") out.push({ tone: "warn", text: `${jobCode(j)} ${j.client} — due in ${d}d, still in ${j.stage}` });
-    if (j.stage === "design" && !j.plan) out.push({ tone: "warn", text: `${jobCode(j)} — CAD / cut plan pending` });
-    if (!j.estimate && +j.price === 0) out.push({ tone: "neutral", text: `${jobCode(j)} ${j.client} — no estimate on file` });
+    if (d !== null && d < 0) out.push({ tone: "alert", job: j, text: `${jobCode(j)} ${j.client} — delivery ${Math.abs(d)}d overdue` });
+    else if (d !== null && d <= 3 && j.stage !== "delivery") out.push({ tone: "warn", job: j, text: `${jobCode(j)} ${j.client} — due in ${d}d, still in ${j.stage}` });
+    if (j.stage === "design" && !j.plan) out.push({ tone: "warn", job: j, text: `${jobCode(j)} — CAD / cut plan pending` });
+    if (!j.estimate && +j.price === 0) out.push({ tone: "neutral", job: j, text: `${jobCode(j)} ${j.client} — no estimate on file` });
   }
   for (const l of lumber) {
     if (l.bf <= l.reorder) out.push({ tone: "alert", text: `Low stock — ${l.species} ${l.thickness} (${l.bf} bf left)` });
@@ -59,13 +59,16 @@ export default function Dashboard({ jobs, lumber, capacity, onNewJob, onClockIn,
         ) : (
           <ul className="flex flex-col gap-1.5">
             {alerts.map((a, i) => (
-              <li
-                key={i}
-                className={`flex items-start gap-2 rounded-md border-l-2 bg-sunk/60 px-3 py-2 text-sm ${
-                  a.tone === "alert" ? "border-alert" : a.tone === "warn" ? "border-warn" : "border-line-2"
-                }`}
-              >
-                <span className="text-ink-2">{a.text}</span>
+              <li key={i}>
+                <button
+                  onClick={() => a.job && onOpen(a.job)}
+                  disabled={!a.job}
+                  className={`flex w-full items-start gap-2 rounded-md border-l-2 bg-sunk/60 px-3 py-2 text-left text-sm ${
+                    a.job ? "hover:bg-sunk" : "cursor-default"
+                  } ${a.tone === "alert" ? "border-alert" : a.tone === "warn" ? "border-warn" : "border-line-2"}`}
+                >
+                  <span className="text-ink-2">{a.text}</span>
+                </button>
               </li>
             ))}
           </ul>
