@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+/* ── Altops Workshop — warm workshop palette ──────────────────────────
+   Espresso structure, oak accent, cream page, aged-paper cards.
+   Georgia carries the headings; the interface is a plain sans. */
+@theme {
+  --color-esp: #2b2019;
+  --color-esp-2: #3b2d22;
+  --color-oak: #b0894e;
+  --color-cream: #f7f2e8;
+  --color-card: #fffdf8;
+  --color-panel: #faf6ec;
+  --color-ink: #2a221b;
+  --color-ink-soft: #7a6f62;
+  --color-line: #e4dac6;
+
+  --color-quote: #c98a2b;
+  --color-progress: #3a6b8a;
+  --color-done: #4f9d69;
+  --color-delivered: #6f6a63;
+
+  --color-danger: #c05c4d;
+  --color-danger-soft: #9c3b30;
+
+  --font-display: Georgia, "Times New Roman", serif;
+}
+
+@layer base {
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+  }
+}
+
+/* Invoices and cut plans print without the app chrome. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
