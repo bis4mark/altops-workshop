@@ -18,14 +18,18 @@ const NAV = [
   { key: "financials", label: "Quoting & Financials", icon: ReceiptText },
 ];
 
-function Panel({ business, view, onView, onSettings }) {
+function Panel({ business, view, onView, onSettings, collapsible }) {
   return (
-    <div className="flex h-full w-56 shrink-0 flex-col bg-shell text-white/80">
-      <div className="flex items-center gap-2 border-b border-shell-line px-4 py-4">
-        <span className="grid h-7 w-7 place-items-center rounded bg-amber font-mono text-xs font-bold text-white">
+    <div
+      className={`group/side flex h-full flex-col overflow-hidden bg-shell text-white/80 transition-[width] duration-200 ease-out ${
+        collapsible ? "w-14 hover:w-60" : "w-60"
+      }`}
+    >
+      <div className="flex items-center gap-2 border-b border-shell-line px-3.5 py-4">
+        <span className="grid h-7 w-7 shrink-0 place-items-center rounded bg-amber font-mono text-xs font-bold text-white">
           AF
         </span>
-        <div className="min-w-0 leading-tight">
+        <div className="min-w-0 leading-tight opacity-0 transition-opacity duration-150 group-hover/side:opacity-100">
           <div className="truncate text-sm font-semibold text-white">{business}</div>
           <div className="label text-white/40">Workshop OS</div>
         </div>
@@ -38,14 +42,15 @@ function Panel({ business, view, onView, onSettings }) {
             <button
               key={key}
               onClick={() => onView(key)}
+              title={label}
               className={`group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm transition-colors ${
-                on
-                  ? "bg-amber/15 font-medium text-amber"
-                  : "text-white/60 hover:bg-shell-2 hover:text-white"
+                on ? "bg-amber/15 font-medium text-amber" : "text-white/60 hover:bg-shell-2 hover:text-white"
               }`}
             >
-              <Icon size={16} className={on ? "text-amber" : "text-white/45 group-hover:text-white"} />
-              {label}
+              <Icon size={18} className={`shrink-0 ${on ? "text-amber" : "text-white/45 group-hover:text-white"}`} />
+              <span className="truncate opacity-0 transition-opacity duration-150 group-hover/side:opacity-100">
+                {label}
+              </span>
             </button>
           );
         })}
@@ -53,10 +58,13 @@ function Panel({ business, view, onView, onSettings }) {
 
       <button
         onClick={onSettings}
-        className="flex items-center gap-2.5 border-t border-shell-line px-4 py-3 text-sm text-white/55 transition-colors hover:text-white"
+        title="Business settings"
+        className="flex items-center gap-2.5 border-t border-shell-line px-3.5 py-3 text-sm text-white/55 transition-colors hover:text-white"
       >
-        <Settings2 size={16} />
-        Business settings
+        <Settings2 size={18} className="shrink-0" />
+        <span className="truncate opacity-0 transition-opacity duration-150 group-hover/side:opacity-100">
+          Business settings
+        </span>
       </button>
     </div>
   );
@@ -69,8 +77,11 @@ export default function Sidebar({ business, view, onView, onSettings, mobileOpen
   };
   return (
     <>
-      <aside className="hidden lg:block">
-        <Panel business={business} view={view} onView={onView} onSettings={onSettings} />
+      {/* Desktop: a 56px rail that expands over the content on hover */}
+      <aside className="relative hidden w-14 shrink-0 lg:block">
+        <div className="absolute inset-y-0 left-0 z-40">
+          <Panel business={business} view={view} onView={onView} onSettings={onSettings} collapsible />
+        </div>
       </aside>
 
       <AnimatePresence>
