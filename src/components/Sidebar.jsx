@@ -93,7 +93,7 @@ export default function Sidebar({ business, view, onView, onSettings, mobileOpen
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="absolute inset-0 bg-ink/40" onClick={onCloseMobile} />
+            <div className="absolute inset-0 bg-black/50" onClick={onCloseMobile} />
             <motion.div
               className="absolute inset-y-0 left-0"
               initial={{ x: "-100%" }}

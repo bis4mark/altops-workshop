@@ -27,10 +27,69 @@
   --color-shell-2: #2e2c29;
   --color-shell-line: #3a3835;
 
+  --color-shine: #f3f1ee;
+
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 
   --animate-shimmer: shimmer 1.4s linear infinite;
+}
+
+/* ── Dark theme ─────────────────────────────────────────────────────
+   Same amber accent, charcoal shop-floor at night. Applies when the OS
+   asks for dark and the user has not forced light, or when the user
+   picks Dark explicitly. Light stays the bare :root above. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-canvas: #171614;
+    --color-surface: #201e1b;
+    --color-sunk: #2a2724;
+
+    --color-ink: #ece8e1;
+    --color-ink-2: #b0a99e;
+    --color-ink-3: #7d766b;
+
+    --color-line: #322f2b;
+    --color-line-2: #423e39;
+
+    --color-amber: #f59e0b;
+    --color-amber-2: #d97706;
+
+    --color-ok: #5bb06e;
+    --color-warn: #f59e0b;
+    --color-alert: #ef4444;
+
+    --color-shell: #121110;
+    --color-shell-2: #1d1b19;
+    --color-shell-line: #2c2926;
+
+    --color-shine: #302c28;
+  }
+}
+:root[data-theme="dark"] {
+  --color-canvas: #171614;
+  --color-surface: #201e1b;
+  --color-sunk: #2a2724;
+
+  --color-ink: #ece8e1;
+  --color-ink-2: #b0a99e;
+  --color-ink-3: #7d766b;
+
+  --color-line: #322f2b;
+  --color-line-2: #423e39;
+
+  --color-amber: #f59e0b;
+  --color-amber-2: #d97706;
+
+  --color-ok: #5bb06e;
+  --color-warn: #f59e0b;
+  --color-alert: #ef4444;
+
+  --color-shell: #121110;
+  --color-shell-2: #1d1b19;
+  --color-shell-line: #2c2926;
+
+  --color-shine: #302c28;
 }
 
 @layer base {
@@ -76,7 +135,7 @@
   100% { background-position: 400px 0; }
 }
 .skeleton {
-  background-image: linear-gradient(90deg, var(--color-sunk) 25%, #f3f1ee 50%, var(--color-sunk) 75%);
+  background-image: linear-gradient(90deg, var(--color-sunk) 25%, var(--color-shine) 50%, var(--color-sunk) 75%);
   background-size: 800px 100%;
   animation: var(--animate-shimmer);
 }

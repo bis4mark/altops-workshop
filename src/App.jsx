@@ -15,6 +15,7 @@ import { Skeleton } from "./components/ui/widgets";
 import { DEFAULT_SETTINGS, STATUS_TO_STAGE } from "./lib/constants";
 import { emptyJob } from "./lib/format";
 import { seedIfEmpty } from "./lib/seed";
+import { useTheme } from "./lib/theme";
 import {
   loadCollection,
   loadJobs,
@@ -28,6 +29,7 @@ const byNewest = (a, b) => b.createdAt - a.createdAt;
 const migrate = (j) => ({ ...j, stage: j.stage || STATUS_TO_STAGE[j.status] || "deposit" });
 
 export default function App() {
+  const { theme, setTheme } = useTheme();
   const [view, setView] = useState("dashboard");
   const [jobs, setJobs] = useState([]);
   const [lumber, setLumber] = useState([]);
@@ -113,6 +115,8 @@ export default function App() {
           onMenu={() => setMobileNav(true)}
           onNewJob={newJob}
           onClockIn={() => setView("schedule")}
+          theme={theme}
+          onTheme={setTheme}
         />
 
         <main className="min-h-0 flex-1">

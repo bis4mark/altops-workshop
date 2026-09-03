@@ -1,4 +1,5 @@
 import { Clock, Menu, Plus } from "lucide-react";
+import ThemeToggle from "./ui/ThemeToggle";
 
 const TITLES = {
   dashboard: ["Dashboard", "Shop floor at a glance"],
@@ -9,7 +10,7 @@ const TITLES = {
   financials: ["Quoting & Financials", "Estimates and payment tracking"],
 };
 
-export default function Topbar({ view, onMenu, onNewJob, onClockIn }) {
+export default function Topbar({ view, onMenu, onNewJob, onClockIn, theme, onTheme }) {
   const [title, sub] = TITLES[view] || ["Altops Workshop", ""];
   return (
     <header className="flex items-center justify-between gap-3 border-b border-line bg-surface px-4 py-3 lg:px-6">
@@ -24,6 +25,7 @@ export default function Topbar({ view, onMenu, onNewJob, onClockIn }) {
       </div>
 
       <div className="flex items-center gap-2">
+        <ThemeToggle theme={theme} onChange={onTheme} />
         <button onClick={onClockIn} className="btn">
           <Clock size={15} />
           <span className="hidden sm:inline">Clock-In</span>
