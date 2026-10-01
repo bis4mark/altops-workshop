@@ -3,6 +3,7 @@ import DetailsPanel from "./panels/DetailsPanel";
 import MeasurePanel from "./panels/MeasurePanel";
 import EstimatePanel from "./panels/EstimatePanel";
 import PlanPanel from "./panels/PlanPanel";
+import PreviewPanel from "./panels/PreviewPanel";
 import PhotosPanel from "./panels/PhotosPanel";
 
 const TABS = [
@@ -10,6 +11,7 @@ const TABS = [
   ["measure", "Measure"],
   ["estimate", "Estimate"],
   ["plan", "Plan"],
+  ["preview", "3D Preview"],
   ["photos", "Photos"],
 ];
 
@@ -69,6 +71,7 @@ export default function JobEditor({ job, settings, onSave, onPatch, onCancel, on
         )}
         {tab === "estimate" && <EstimatePanel j={j} patch={patch} settings={settings} />}
         {tab === "plan" && <PlanPanel j={j} patch={patch} />}
+        {tab === "preview" && <PreviewPanel j={j} patch={patch} />}
         {tab === "photos" && <PhotosPanel j={j} setJ={setJ} setLightbox={setLightbox} />}
       </div>
 
