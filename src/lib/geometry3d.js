@@ -3,6 +3,42 @@
    approximate the assembled carcass/table so a preview can show rough
    proportions, wood tone and hardware style. */
 
+const SIZE_FOR_AXIS = { x: "w", y: "h", z: "d" };
+
+export function extent(box, axis) {
+  if (box.shape === "knob") return box.radius * 2;
+  return box[SIZE_FOR_AXIS[axis]] ?? 0;
+}
+
+const EXPLODE_GAP = 60;
+
+/** Where a box lands fully pulled apart, for the 3D preview's assembly
+   slider and the Drawings tab's exploded diagram — one shared definition
+   of "exploded" so both views agree. `seen` is a plain object the caller
+   creates once per batch (one call per box in a single boxes.map pass) and
+   passes through, used to alternate parts that sit exactly on-center. */
+export function explodedPosition(box, job, seen = {}) {
+  const W = +job.W;
+  const H = +job.H;
+  const D = +job.D || (job.type === "Table" ? 600 : 570);
+
+  const nx = Math.abs(box.x) / (W / 2 || 1);
+  const ny = Math.abs(box.y - H / 2) / (H / 2 || 1);
+  const nz = Math.abs(box.z) / (D / 2 || 1);
+  const dominant = nx >= ny && nx >= nz ? "x" : ny >= nz ? "y" : "z";
+
+  const centerOnAxis = dominant === "y" ? H / 2 : 0;
+  let sign = Math.sign(box[dominant] - centerOnAxis);
+  if (sign === 0) {
+    const group = `${box.name}-${dominant}`;
+    seen[group] = (seen[group] || 0) + 1;
+    sign = seen[group] % 2 === 0 ? -1 : 1;
+  }
+  const offset = sign * (EXPLODE_GAP + extent(box, dominant) * 0.6);
+
+  return { x: box.x, y: box.y, z: box.z, [dominant]: box[dominant] + offset };
+}
+
 function doorHardware(doorBox, hardwareStyle, idx) {
   const edgeX = doorBox.x >= 0 ? doorBox.x + doorBox.w / 2 - 25 : doorBox.x - doorBox.w / 2 + 25;
   const z = doorBox.z + doorBox.d / 2 + (hardwareStyle === "knob" ? 10 : 6);

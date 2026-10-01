@@ -1,13 +1,7 @@
 /* Projects buildGeometry3D's 3D box descriptors onto 2D blueprint views:
    front/side/top orthographic elevations plus an exploded isometric
    assembly diagram. Pure geometry — no SVG/DOM here, see DrawingsPanel. */
-
-const SIZE_FOR_AXIS = { x: "w", y: "h", z: "d" };
-
-function extent(box, axis) {
-  if (box.shape === "knob") return box.radius * 2;
-  return box[SIZE_FOR_AXIS[axis]] ?? 0;
-}
+import { extent, explodedPosition } from "./geometry3d";
 
 function boxToRect(box, axisA, axisB) {
   const aHalf = extent(box, axisA) / 2;
@@ -65,7 +59,6 @@ export function projectTop(boxes, job) {
   );
 }
 
-const EXPLODE_GAP = 60;
 const COS30 = Math.cos(Math.PI / 6);
 const SIN30 = Math.sin(Math.PI / 6);
 
@@ -101,28 +94,8 @@ function corners(box) {
 }
 
 export function buildExploded(boxes, job) {
-  const W = +job.W;
-  const H = +job.H;
-  const D = +job.D || (job.type === "Table" ? 600 : 570);
   const seen = {};
-
-  const exploded = boxes.map((b) => {
-    const nx = Math.abs(b.x) / (W / 2 || 1);
-    const ny = Math.abs(b.y - H / 2) / (H / 2 || 1);
-    const nz = Math.abs(b.z) / (D / 2 || 1);
-    const dominant = nx >= ny && nx >= nz ? "x" : ny >= nz ? "y" : "z";
-
-    const centerOnAxis = dominant === "y" ? H / 2 : 0;
-    let sign = Math.sign(b[dominant] - centerOnAxis);
-    if (sign === 0) {
-      const group = `${b.name}-${dominant}`;
-      seen[group] = (seen[group] || 0) + 1;
-      sign = seen[group] % 2 === 0 ? -1 : 1;
-    }
-    const offset = sign * (EXPLODE_GAP + extent(b, dominant) * 0.6);
-
-    return { ...b, [dominant]: b[dominant] + offset };
-  });
+  const exploded = boxes.map((b) => ({ ...b, ...explodedPosition(b, job, seen) }));
 
   const parts = exploded.map((b) => {
     const { topFace, frontFace, sideFace } = corners(b);

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { buildGeometry3D } from "../../lib/geometry3d";
+import { buildGeometry3D, explodedPosition } from "../../lib/geometry3d";
 import { getWoodTexture } from "../../lib/woodTexture";
 
 const SCALE = 1 / 100; // mm -> scene units
 const TEXTURE_REPEAT_MM = 150; // grain tile size in real-world mm
+const lerp = (a, b, t) => a + (b - a) * t;
 
 function disposeGroup(group) {
   group.children.forEach((mesh) => {
@@ -42,6 +43,7 @@ export default function PreviewPanel({ j }) {
   const controlsRef = useRef(null);
   const dirLightRef = useRef(null);
   const [hardwareStyle, setHardwareStyle] = useState("bar");
+  const [assembly, setAssembly] = useState(100);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -127,9 +129,16 @@ export default function PreviewPanel({ j }) {
     disposeGroup(group);
 
     const boxes = buildGeometry3D(j, j.plan, hardwareStyle);
+    const seen = {};
+    const t = assembly / 100;
     boxes.forEach((b) => {
       const mesh = buildMesh(b);
-      mesh.position.set(b.x * SCALE, b.y * SCALE, b.z * SCALE);
+      const exploded = explodedPosition(b, j, seen);
+      mesh.position.set(
+        lerp(exploded.x, b.x, t) * SCALE,
+        lerp(exploded.y, b.y, t) * SCALE,
+        lerp(exploded.z, b.z, t) * SCALE
+      );
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       group.add(mesh);
@@ -154,7 +163,7 @@ export default function PreviewPanel({ j }) {
       dir.shadow.camera.far = radius * 6;
       dir.shadow.camera.updateProjectionMatrix();
     }
-  }, [j.plan, j.W, j.H, j.D, j.type, j.species, hardwareStyle]);
+  }, [j.plan, j.W, j.H, j.D, j.type, j.species, hardwareStyle, assembly]);
 
   if (!j.plan) {
     return (
@@ -166,21 +175,34 @@ export default function PreviewPanel({ j }) {
 
   return (
     <div>
-      <div className="mb-2.5 flex gap-1.5">
-        {[
-          ["bar", "Bar handle"],
-          ["knob", "Round knob"],
-        ].map(([key, label]) => (
-          <button
-            key={key}
-            onClick={() => setHardwareStyle(key)}
-            className={`rounded-md px-3 py-1.5 text-[13px] font-semibold transition-colors ${
-              hardwareStyle === key ? "bg-ink text-white" : "text-ink hover:bg-sunk"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="mb-2.5 flex flex-wrap items-center gap-3">
+        <div className="flex gap-1.5">
+          {[
+            ["bar", "Bar handle"],
+            ["knob", "Round knob"],
+          ].map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setHardwareStyle(key)}
+              className={`rounded-md px-3 py-1.5 text-[13px] font-semibold transition-colors ${
+                hardwareStyle === key ? "bg-ink text-white" : "text-ink hover:bg-sunk"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <label className="flex min-w-[220px] flex-1 items-center gap-2 text-[13px] text-ink-2">
+          <span className="shrink-0">{assembly === 0 ? "Exploded" : assembly === 100 ? "Assembled" : `${assembly}%`}</span>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={assembly}
+            onChange={(e) => setAssembly(+e.target.value)}
+            className="w-full"
+          />
+        </label>
       </div>
       <div ref={containerRef} className="h-[420px] w-full rounded-lg border border-line" />
       <div className="mt-2.5 text-xs text-ink-2">
