@@ -158,11 +158,11 @@ export default function App() {
           ) : view === "pipeline" ? (
             <Pipeline jobs={jobs} onOpen={setEditing} onStage={setStage} onNewJob={newJob} />
           ) : view === "inventory" ? (
-            <Inventory />
+            <Inventory pushToast={pushToast} />
           ) : view === "locker" ? (
             <Locker jobs={jobs} onOpen={setEditing} onNewJob={newJob} onAddPhoto={addJobPhoto} />
           ) : view === "schedule" ? (
-            <Schedule jobs={jobs} />
+            <Schedule jobs={jobs} pushToast={pushToast} />
           ) : (
             <Financials jobs={jobs} onOpen={setEditing} onPay={recordPayment} />
           )}

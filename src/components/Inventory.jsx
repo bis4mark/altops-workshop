@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowDown, ArrowUp, Search } from "lucide-react";
 import { Pill } from "./ui/widgets";
-import { loadCollection, persistItem } from "../lib/storage";
+import { loadCollection, persistItem, removeItem } from "../lib/storage";
 
 const stockTone = (qty, reorder) =>
   qty <= reorder ? "alert" : qty <= reorder * 1.35 ? "warn" : "ok";
@@ -23,7 +23,7 @@ function SortHead({ col, label, sort, setSort, className = "" }) {
   );
 }
 
-export default function Inventory() {
+export default function Inventory({ pushToast }) {
   const [lumber, setLumber] = useState([]);
   const [cons, setCons] = useState([]);
   const [q, setQ] = useState("");
@@ -43,6 +43,28 @@ export default function Inventory() {
     const next = { ...row, qty: Math.max(0, qty) };
     setCons((c) => c.map((x) => (x.id === row.id ? next : x)));
     persistItem("wcons_", next);
+  };
+  const removeLumber = (row) => {
+    setLumber((l) => l.filter((x) => x.id !== row.id));
+    removeItem("wlumber_", row.id);
+    pushToast?.(`${row.species} ${row.thickness} removed`, {
+      label: "Undo",
+      onClick: () => {
+        persistItem("wlumber_", row);
+        setLumber((l) => [row, ...l]);
+      },
+    });
+  };
+  const removeCons = (row) => {
+    setCons((c) => c.filter((x) => x.id !== row.id));
+    removeItem("wcons_", row.id);
+    pushToast?.(`${row.name} removed`, {
+      label: "Undo",
+      onClick: () => {
+        persistItem("wcons_", row);
+        setCons((c) => [row, ...c]);
+      },
+    });
   };
 
   const rows = useMemo(() => {
@@ -78,6 +100,7 @@ export default function Inventory() {
                 <SortHead col="drying" label="Drying" sort={sort} setSort={setSort} />
                 <SortHead col="bf" label="Board feet" sort={sort} setSort={setSort} />
                 <th className="px-3 py-2 text-left label">Status</th>
+                <th className="px-3 py-2 text-left label"></th>
               </tr>
             </thead>
             <tbody>
@@ -98,10 +121,19 @@ export default function Inventory() {
                   <td className="px-3 py-2">
                     <Pill tone={stockTone(r.bf, r.reorder)}>{stockText(r.bf, r.reorder)}</Pill>
                   </td>
+                  <td className="px-3 py-2">
+                    <button
+                      onClick={() => removeLumber(r)}
+                      aria-label="Remove"
+                      className="rounded px-1.5 py-0.5 text-xs text-ink-3 transition-colors hover:bg-alert/10 hover:text-alert"
+                    >
+                      ✕
+                    </button>
+                  </td>
                 </tr>
               ))}
               {rows.length === 0 && (
-                <tr><td colSpan={5} className="px-3 py-8 text-center text-sm text-ink-2">Nothing matches “{q}”.</td></tr>
+                <tr><td colSpan={6} className="px-3 py-8 text-center text-sm text-ink-2">Nothing matches “{q}”.</td></tr>
               )}
             </tbody>
           </table>
@@ -113,7 +145,16 @@ export default function Inventory() {
         <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {cons.map((c) => (
             <div key={c.id} className="card p-3">
-              <div className="text-sm font-medium text-ink">{c.name}</div>
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-sm font-medium text-ink">{c.name}</div>
+                <button
+                  onClick={() => removeCons(c)}
+                  aria-label="Remove"
+                  className="shrink-0 rounded px-1 text-xs text-ink-3 transition-colors hover:bg-alert/10 hover:text-alert"
+                >
+                  ✕
+                </button>
+              </div>
               <div className="mt-2 flex items-end gap-1">
                 <input
                   type="number"

@@ -7,7 +7,7 @@ import { rid } from "../lib/format";
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const HOURS = ["08:00", "10:00", "12:00", "14:00", "16:00"];
 
-export default function Schedule({ jobs }) {
+export default function Schedule({ jobs, pushToast }) {
   const [cards, setCards] = useState([]);
   const [running, setRunning] = useState(flag.get("clockedInAt") || null);
   const [job, setJob] = useState("");
@@ -32,7 +32,20 @@ export default function Schedule({ jobs }) {
     flag.set("clockedInAt", "");
     setRunning(null);
   };
-  const clear = (id) => { removeItem("wtc_", id); setCards((c) => c.filter((x) => x.id !== id)); };
+  const clear = (id) => {
+    const removed = cards.find((x) => x.id === id);
+    removeItem("wtc_", id);
+    setCards((c) => c.filter((x) => x.id !== id));
+    if (removed) {
+      pushToast?.("Time card removed", {
+        label: "Undo",
+        onClick: () => {
+          persistItem("wtc_", removed);
+          setCards((c) => [removed, ...c]);
+        },
+      });
+    }
+  };
 
   const toggle = (m, d, h) => {
     const key = `${m}|${d}|${h}`;

@@ -133,7 +133,7 @@ export default function DrawingsPanel({ j }) {
       </div>
 
       <div className="no-print mt-3">
-        <button onClick={() => window.print()} className="rounded-lg bg-amber px-4 py-2 font-bold text-ink">
+        <button onClick={() => window.print()} className="btn btn-amber">
           Print drawings
         </button>
       </div>

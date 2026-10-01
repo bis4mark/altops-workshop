@@ -38,7 +38,7 @@ export default function PlanPanel({ j, patch }) {
       <button
         onClick={generate}
         disabled={missing}
-        className="mt-3 rounded-lg bg-ink px-4 py-2.5 font-semibold text-white disabled:opacity-50"
+        className="mt-3 rounded-lg bg-ink px-4 py-2.5 font-semibold text-white transition-[filter,transform] hover:brightness-110 active:scale-[0.97] disabled:opacity-50"
       >
         Generate cut plan
       </button>
@@ -80,7 +80,7 @@ export default function PlanPanel({ j, patch }) {
           <div className="no-print mt-2.5">
             <button
               onClick={() => window.print()}
-              className="rounded-lg bg-amber px-4 py-2 font-bold text-ink"
+              className="rounded-lg bg-amber px-4 py-2 font-bold text-ink transition-[filter,transform] hover:brightness-105 active:scale-[0.97]"
             >
               Print cut plan
             </button>

@@ -6,6 +6,7 @@ import PlanPanel from "./panels/PlanPanel";
 import PreviewPanel from "./panels/PreviewPanel";
 import DrawingsPanel from "./panels/DrawingsPanel";
 import PhotosPanel from "./panels/PhotosPanel";
+import { Spinner } from "./ui/widgets";
 
 const TABS = [
   ["details", "Details"],
@@ -28,12 +29,19 @@ const isDone = (key, job) => {
 export default function JobEditor({ job, settings, onSave, onPatch, onCancel, onDelete, setLightbox }) {
   const [j, setJ] = useState(job);
   const [tab, setTab] = useState("details");
+  const [saving, setSaving] = useState(false);
 
   const up = (key, value) => setJ((x) => ({ ...x, [key]: value }));
   const patch = (partial) => {
     const next = { ...j, ...partial };
     setJ(next);
     onPatch(next);
+  };
+
+  const invalid = !j.title?.trim() || !j.W || !j.H;
+  const save = async () => {
+    setSaving(true);
+    await onSave(j);
   };
 
   return (
@@ -87,8 +95,14 @@ export default function JobEditor({ job, settings, onSave, onPatch, onCancel, on
           <button onClick={onCancel} className="btn">
             Cancel
           </button>
-          <button onClick={() => onSave(j)} className="btn btn-amber">
-            Save job
+          <button onClick={save} disabled={invalid || saving} className="btn btn-amber">
+            {saving ? (
+              <>
+                <Spinner /> Saving
+              </>
+            ) : (
+              "Save job"
+            )}
           </button>
         </div>
       </div>

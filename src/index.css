@@ -122,7 +122,7 @@
            hover:border-line-2 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40;
   }
   .btn-amber {
-    @apply border-amber bg-amber text-white hover:brightness-105;
+    @apply border-amber bg-amber text-white transition-[filter] hover:brightness-105;
   }
   .field {
     @apply w-full rounded-md border border-line bg-surface px-2.5 py-1.5 text-sm text-ink

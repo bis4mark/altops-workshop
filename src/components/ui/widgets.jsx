@@ -73,3 +73,11 @@ export function Empty({ icon: Icon, title, hint, action, onAction }) {
 export function Skeleton({ className = "h-4 w-full" }) {
   return <div className={`skeleton rounded ${className}`} />;
 }
+
+export function Spinner({ className = "h-3.5 w-3.5" }) {
+  return (
+    <span
+      className={`inline-block shrink-0 animate-spin rounded-full border-2 border-current border-r-transparent ${className}`}
+    />
+  );
+}

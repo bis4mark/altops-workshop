@@ -157,19 +157,19 @@ export default function EstimatePanel({ j, patch, settings }) {
       <div className="no-print mt-3 flex flex-wrap gap-2">
         <button
           onClick={() => patch({ price: String(subtotal), deposit: String(advance), estimate: estimate() })}
-          className="rounded-lg bg-ink px-4 py-2.5 font-semibold text-white"
+          className="rounded-lg bg-ink px-4 py-2.5 font-semibold text-white transition-[filter,transform] hover:brightness-110 active:scale-[0.97]"
         >
           Apply price to job
         </button>
         <button
           onClick={() => patch({ estimate: estimate() })}
-          className="rounded-lg border border-amber px-4 py-2.5 font-semibold text-amber"
+          className="rounded-lg border border-amber px-4 py-2.5 font-semibold text-amber transition-colors active:scale-[0.97] hover:bg-amber/10"
         >
           Save estimate
         </button>
         <button
           onClick={() => setInvoice((v) => !v)}
-          className="rounded-lg bg-amber px-4 py-2.5 font-bold text-ink"
+          className="rounded-lg bg-amber px-4 py-2.5 font-bold text-ink transition-[filter,transform] hover:brightness-105 active:scale-[0.97]"
         >
           {invoice ? "Hide invoice" : "Generate invoice"}
         </button>
@@ -242,7 +242,7 @@ export default function EstimatePanel({ j, patch, settings }) {
           <div className="no-print mt-4 text-center">
             <button
               onClick={() => window.print()}
-              className="rounded-md bg-ink px-6 py-2.5 text-amber"
+              className="rounded-md bg-ink px-6 py-2.5 text-amber transition-[filter,transform] hover:brightness-125 active:scale-[0.97]"
             >
               Print / Save as PDF
             </button>

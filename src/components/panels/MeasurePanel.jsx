@@ -124,14 +124,14 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
             <button
               onClick={startCam}
               disabled={busy}
-              className="flex-1 rounded-lg bg-ink p-3 font-semibold text-white disabled:opacity-50"
+              className="flex-1 rounded-lg bg-ink p-3 font-semibold text-white transition-[filter,transform] hover:brightness-110 active:scale-[0.97] disabled:opacity-50"
             >
               Open camera
             </button>
             <button
               onClick={() => fileRef.current && fileRef.current.click()}
               disabled={busy}
-              className="flex-1 rounded-lg border border-amber p-3 font-semibold text-amber disabled:opacity-50"
+              className="flex-1 rounded-lg border border-amber p-3 font-semibold text-amber transition-colors active:scale-[0.97] hover:bg-amber/10 disabled:opacity-50"
             >
               Upload photo (JPEG/PNG)
             </button>
