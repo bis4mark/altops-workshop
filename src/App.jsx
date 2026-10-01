@@ -11,6 +11,7 @@ import Drawer from "./components/ui/Drawer";
 import JobEditor from "./components/JobEditor";
 import Settings from "./components/Settings";
 import Lightbox from "./components/Lightbox";
+import ToastHost from "./components/ui/Toast";
 import { Skeleton } from "./components/ui/widgets";
 import { DEFAULT_SETTINGS, STATUS_TO_STAGE } from "./lib/constants";
 import { emptyJob } from "./lib/format";
@@ -39,6 +40,14 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [lightbox, setLightbox] = useState(null);
+  const [toasts, setToasts] = useState([]);
+
+  const pushToast = (message, action) => {
+    const id = Date.now() + Math.random();
+    setToasts((t) => [...t, { id, message, action }]);
+    setTimeout(() => setToasts((t) => t.filter((x) => x.id !== id)), action ? 6000 : 2600);
+  };
+  const dismissToast = (id) => setToasts((t) => t.filter((x) => x.id !== id));
 
   useEffect(() => {
     (async () => {
@@ -58,12 +67,24 @@ export default function App() {
       return next.sort(byNewest);
     });
 
-  const saveJob = async (job) => { await persistJob(job); upsert(job); setEditing(null); };
+  const saveJob = async (job) => {
+    await persistJob(job);
+    upsert(job);
+    setEditing(null);
+    pushToast(`${job.title || "Job"} saved`);
+  };
   const patchJob = async (job) => { await persistJob(job); upsert(job); setEditing(job); };
   const deleteJob = async (id) => {
+    const removed = jobs.find((x) => x.id === id);
     await removeJob(id);
     setJobs((list) => list.filter((x) => x.id !== id));
     setEditing(null);
+    if (removed) {
+      pushToast(`${removed.title || "Job"} deleted`, {
+        label: "Undo",
+        onClick: async () => { await persistJob(removed); upsert(removed); },
+      });
+    }
   };
   const setStage = async (id, stage) => {
     const job = jobs.find((x) => x.id === id);
@@ -176,6 +197,8 @@ export default function App() {
       />
 
       {lightbox && <Lightbox src={lightbox} onClose={() => setLightbox(null)} />}
+
+      <ToastHost toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 }
