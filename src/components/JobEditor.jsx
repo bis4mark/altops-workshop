@@ -4,6 +4,7 @@ import MeasurePanel from "./panels/MeasurePanel";
 import EstimatePanel from "./panels/EstimatePanel";
 import PlanPanel from "./panels/PlanPanel";
 import PreviewPanel from "./panels/PreviewPanel";
+import DrawingsPanel from "./panels/DrawingsPanel";
 import PhotosPanel from "./panels/PhotosPanel";
 
 const TABS = [
@@ -12,6 +13,7 @@ const TABS = [
   ["estimate", "Estimate"],
   ["plan", "Plan"],
   ["preview", "3D Preview"],
+  ["drawings", "Drawings"],
   ["photos", "Photos"],
 ];
 
@@ -19,6 +21,7 @@ const isDone = (key, job) => {
   if (key === "measure") return (job.measurements || []).length > 0;
   if (key === "estimate") return !!job.estimate;
   if (key === "plan") return !!job.plan;
+  if (key === "drawings") return !!job.plan;
   return false;
 };
 
@@ -72,6 +75,7 @@ export default function JobEditor({ job, settings, onSave, onPatch, onCancel, on
         {tab === "estimate" && <EstimatePanel j={j} patch={patch} settings={settings} />}
         {tab === "plan" && <PlanPanel j={j} patch={patch} />}
         {tab === "preview" && <PreviewPanel j={j} patch={patch} />}
+        {tab === "drawings" && <DrawingsPanel j={j} patch={patch} />}
         {tab === "photos" && <PhotosPanel j={j} setJ={setJ} setLightbox={setLightbox} />}
       </div>
 

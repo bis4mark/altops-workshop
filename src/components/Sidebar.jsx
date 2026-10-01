@@ -8,14 +8,15 @@ import {
   ReceiptText,
   Settings2,
 } from "lucide-react";
+import { woodByName } from "../lib/constants";
 
 const NAV = [
-  { key: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { key: "pipeline", label: "Job Pipeline", icon: Columns3 },
-  { key: "inventory", label: "Lumber & Hardware", icon: Boxes },
-  { key: "locker", label: "Workshop Locker", icon: FolderOpen },
-  { key: "schedule", label: "Labor & Schedule", icon: CalendarClock },
-  { key: "financials", label: "Quoting & Financials", icon: ReceiptText },
+  { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, tone: woodByName("Sapele").tone },
+  { key: "pipeline", label: "Job Pipeline", icon: Columns3, tone: woodByName("Mahogany").tone },
+  { key: "inventory", label: "Lumber & Hardware", icon: Boxes, tone: woodByName("Odum (Iroko)").tone },
+  { key: "locker", label: "Workshop Locker", icon: FolderOpen, tone: woodByName("Wawa").tone },
+  { key: "schedule", label: "Labor & Schedule", icon: CalendarClock, tone: woodByName("Plywood").tone },
+  { key: "financials", label: "Quoting & Financials", icon: ReceiptText, tone: woodByName("MDF Board").tone },
 ];
 
 function Panel({ business, view, onView, onSettings, collapsible }) {
@@ -36,7 +37,7 @@ function Panel({ business, view, onView, onSettings, collapsible }) {
       </div>
 
       <nav className="flex flex-1 flex-col gap-0.5 p-2">
-        {NAV.map(({ key, label, icon: Icon }) => {
+        {NAV.map(({ key, label, icon: Icon, tone }) => {
           const on = view === key;
           return (
             <button
@@ -44,10 +45,15 @@ function Panel({ business, view, onView, onSettings, collapsible }) {
               onClick={() => onView(key)}
               title={label}
               className={`group flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm transition-colors ${
-                on ? "bg-amber/15 font-medium text-amber" : "text-white/60 hover:bg-shell-2 hover:text-white"
+                on ? "font-medium" : "text-white/60 hover:bg-shell-2 hover:text-white"
               }`}
+              style={on ? { backgroundColor: `${tone}26`, color: tone } : undefined}
             >
-              <Icon size={18} className={`shrink-0 ${on ? "text-amber" : "text-white/45 group-hover:text-white"}`} />
+              <Icon
+                size={18}
+                className="shrink-0 transition-opacity duration-150 group-hover:opacity-100"
+                style={{ color: tone, opacity: on ? 1 : 0.55 }}
+              />
               <span className="truncate opacity-0 transition-opacity duration-150 group-hover/side:opacity-100">
                 {label}
               </span>

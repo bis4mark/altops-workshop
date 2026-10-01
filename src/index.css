@@ -149,4 +149,5 @@
 
 @media print {
   .no-print { display: none !important; }
+  .drawing-sheet { break-inside: avoid; page-break-inside: avoid; }
 }
