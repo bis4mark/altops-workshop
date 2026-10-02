@@ -40,16 +40,16 @@ export function explodedPosition(box, job, seen = {}) {
 }
 
 function doorHardware(doorBox, hardwareStyle, idx) {
-  const edgeX = doorBox.x >= 0 ? doorBox.x + doorBox.w / 2 - 25 : doorBox.x - doorBox.w / 2 + 25;
-  const z = doorBox.z + doorBox.d / 2 + (hardwareStyle === "knob" ? 10 : 6);
+  const edgeX = doorBox.x >= 0 ? doorBox.x + doorBox.w / 2 - 35 : doorBox.x - doorBox.w / 2 + 35;
+  const z = doorBox.z + doorBox.d / 2 + (hardwareStyle === "knob" ? 16 : 10);
   if (hardwareStyle === "knob") {
     return {
       id: `hw-${idx}`,
       name: "Knob",
       shape: "knob",
       material: "hardware",
-      radius: 9,
-      height: 18,
+      radius: 16,
+      height: 32,
       x: edgeX,
       y: doorBox.y,
       z,
@@ -60,9 +60,9 @@ function doorHardware(doorBox, hardwareStyle, idx) {
     name: "Handle",
     shape: "bar",
     material: "hardware",
-    w: 10,
-    h: 120,
-    d: 10,
+    w: 16,
+    h: 180,
+    d: 16,
     x: edgeX,
     y: doorBox.y,
     z,

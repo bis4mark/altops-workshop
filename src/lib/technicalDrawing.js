@@ -9,6 +9,7 @@ function boxToRect(box, axisA, axisB) {
   return {
     id: box.id,
     label: box.name,
+    material: box.material,
     x: box[axisA] - aHalf,
     y: box[axisB] - bHalf,
     w: aHalf * 2,
@@ -127,17 +128,17 @@ export function buildExploded(boxes, job) {
   };
 }
 
-export function dimensionLines(bounds, { side = "bottom", offset = 30, label } = {}) {
+export function dimensionLines(bounds, { side = "bottom", offset = 50, label } = {}) {
   const { minX, maxX, minY, maxY } = bounds;
   if (side === "bottom" || side === "top") {
     const y = side === "bottom" ? maxY + offset : minY - offset;
     return {
       line: { x1: minX, y1: y, x2: maxX, y2: y },
       ticks: [
-        { x1: minX, y1: y - 6, x2: minX, y2: y + 6 },
-        { x1: maxX, y1: y - 6, x2: maxX, y2: y + 6 },
+        { x1: minX, y1: y - 12, x2: minX, y2: y + 12 },
+        { x1: maxX, y1: y - 12, x2: maxX, y2: y + 12 },
       ],
-      textPos: { x: (minX + maxX) / 2, y: y + (side === "bottom" ? 16 : -10) },
+      textPos: { x: (minX + maxX) / 2, y: y + (side === "bottom" ? 32 : -18) },
       text: label ?? `${Math.round(maxX - minX)} mm`,
     };
   }
@@ -145,10 +146,11 @@ export function dimensionLines(bounds, { side = "bottom", offset = 30, label } =
   return {
     line: { x1: x, y1: minY, x2: x, y2: maxY },
     ticks: [
-      { x1: x - 6, y1: minY, x2: x + 6, y2: minY },
-      { x1: x - 6, y1: maxY, x2: x + 6, y2: maxY },
+      { x1: x - 12, y1: minY, x2: x + 12, y2: minY },
+      { x1: x - 12, y1: maxY, x2: x + 12, y2: maxY },
     ],
-    textPos: { x: side === "left" ? x - 10 : x + 10, y: (minY + maxY) / 2 },
+    textPos: { x: side === "left" ? x - 28 : x + 28, y: (minY + maxY) / 2 },
+    rotate: true,
     text: label ?? `${Math.round(maxY - minY)} mm`,
   };
 }

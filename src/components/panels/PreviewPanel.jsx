@@ -16,17 +16,19 @@ function disposeGroup(group) {
   group.clear();
 }
 
+function metalMaterial() {
+  return new THREE.MeshStandardMaterial({ color: "#e8e8ec", metalness: 0.9, roughness: 0.15 });
+}
+
 function buildMesh(b) {
   if (b.shape === "knob") {
-    const geo = new THREE.CylinderGeometry(b.radius * SCALE, b.radius * SCALE, b.height * SCALE, 16);
+    const geo = new THREE.CylinderGeometry(b.radius * SCALE, b.radius * SCALE, b.height * SCALE, 20);
     geo.rotateZ(Math.PI / 2);
-    const mat = new THREE.MeshStandardMaterial({ color: "#c9c9c9", metalness: 0.7, roughness: 0.3 });
-    return new THREE.Mesh(geo, mat);
+    return new THREE.Mesh(geo, metalMaterial());
   }
   if (b.shape === "bar") {
     const geo = new THREE.BoxGeometry(b.w * SCALE, b.h * SCALE, b.d * SCALE);
-    const mat = new THREE.MeshStandardMaterial({ color: "#c9c9c9", metalness: 0.7, roughness: 0.3 });
-    return new THREE.Mesh(geo, mat);
+    return new THREE.Mesh(geo, metalMaterial());
   }
   const geo = new THREE.BoxGeometry(b.w * SCALE, b.h * SCALE, b.d * SCALE);
   const map = getWoodTexture(b.textureKey);

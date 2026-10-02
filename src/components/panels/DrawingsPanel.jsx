@@ -2,17 +2,27 @@ import { useMemo } from "react";
 import { buildGeometry3D } from "../../lib/geometry3d";
 import { buildTechnicalDrawing } from "../../lib/technicalDrawing";
 
-const MARGIN = 60;
-const FONT = 13;
+const MARGIN = 110;
+const DIM_FONT = 30;
+const LABEL_FONT = 24;
 
 function Dim({ dim }) {
   return (
-    <g stroke="#333" strokeWidth={1.5} fill="none">
+    <g stroke="#333" strokeWidth={3} fill="none">
       <line {...dim.line} />
       {dim.ticks.map((t, i) => (
         <line key={i} {...t} />
       ))}
-      <text x={dim.textPos.x} y={dim.textPos.y} fontSize={FONT} fill="#333" stroke="none" textAnchor="middle">
+      <text
+        x={dim.textPos.x}
+        y={dim.textPos.y}
+        fontSize={DIM_FONT}
+        fontWeight={600}
+        fill="#222"
+        stroke="none"
+        textAnchor="middle"
+        transform={dim.rotate ? `rotate(-90, ${dim.textPos.x}, ${dim.textPos.y})` : undefined}
+      >
         {dim.text}
       </text>
     </g>
@@ -34,15 +44,16 @@ function OrthoView({ title, view }) {
               y={h - r.y - r.h}
               width={r.w}
               height={r.h}
-              fill="#e9ddc8"
-              stroke="#5a4a33"
-              strokeWidth={1.5}
+              fill={r.material === "hardware" ? "#c9c9c9" : "#e9ddc8"}
+              stroke={r.material === "hardware" ? "#6b6b6b" : "#5a4a33"}
+              strokeWidth={r.material === "hardware" ? 2 : 2.5}
             />
-            {r.w > 60 && r.h > 20 && (
+            {r.w > 100 && r.h > 50 && (
               <text
                 x={r.x + r.w / 2}
                 y={h - r.y - r.h / 2}
-                fontSize={FONT - 2}
+                fontSize={LABEL_FONT}
+                fontWeight={500}
                 fill="#5a4a33"
                 textAnchor="middle"
                 dominantBaseline="middle"
@@ -61,7 +72,8 @@ function OrthoView({ title, view }) {
 
 function ExplodedView({ exploded }) {
   const { minX, minY, maxX, maxY } = exploded.bounds;
-  const vb = `${minX - MARGIN} ${minY - MARGIN} ${maxX - minX + MARGIN * 2} ${maxY - minY + MARGIN * 2}`;
+  const pad = 40;
+  const vb = `${minX - pad} ${minY - pad} ${maxX - minX + pad * 2} ${maxY - minY + pad * 2}`;
   const shadeFill = { top: "#f0e4cf", left: "#cdb48c", right: "#b89b6e" };
   return (
     <div className="rounded-lg border border-line bg-white p-2">
