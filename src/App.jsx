@@ -14,6 +14,7 @@ import Lightbox from "./components/Lightbox";
 import ToastHost from "./components/ui/Toast";
 import { Skeleton } from "./components/ui/widgets";
 import { DEFAULT_SETTINGS, STATUS_TO_STAGE } from "./lib/constants";
+import { downloadBackup, restoreBackup } from "./lib/backup";
 import { emptyJob } from "./lib/format";
 import { seedIfEmpty } from "./lib/seed";
 import { useTheme } from "./lib/theme";
@@ -117,6 +118,14 @@ export default function App() {
     setShowSettings(false);
   };
 
+  /* A restore rewrites every key at once, so the cheapest correct way to
+     re-read it is a reload — every view re-mounts with the new data. */
+  const restoreAll = async (file) => {
+    const count = await restoreBackup(file);
+    setTimeout(() => window.location.reload(), 700);
+    return count;
+  };
+
   const newJob = () => setEditing(emptyJob());
 
   return (
@@ -194,6 +203,8 @@ export default function App() {
         onSave={saveSettings}
         onClose={() => setShowSettings(false)}
         onClearAll={clearAll}
+        onBackup={downloadBackup}
+        onRestore={restoreAll}
       />
 
       {lightbox && <Lightbox src={lightbox} onClose={() => setLightbox(null)} />}
