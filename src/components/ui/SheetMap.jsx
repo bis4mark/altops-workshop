@@ -1,11 +1,22 @@
 /* One board sheet drawn to scale: every piece where the packer put it, the
-   usable offcuts hatched, so the saw operator can follow it on the floor. */
+   usable offcuts hatched, so the saw operator can follow it on the floor.
+   
+   Optional: overlay the cabinet's footprint (W × D) as a translucent outline,
+   so fabricators see how the pieces relate to the final product dimensions. */
 
 const short = (name, max = 18) => (name.length > max ? `${name.slice(0, max - 1)}…` : name);
 
-export default function SheetMap({ sheet, width, height, mat }) {
+export default function SheetMap({ sheet, width, height, mat, cabinetW, cabinetD }) {
   const hatch = `hatch-${mat}-${sheet.index}`.replace(/[^a-zA-Z0-9-]/g, "");
   const label = Math.max(46, Math.round(height / 16));
+  
+  // If cabinet dimensions are provided, draw the footprint outline and dimensions
+  const showFootprint = cabinetW && cabinetD;
+  const footprintStroke = "#d97706";
+  const footprintOpacity = 0.15;
+  const dimLineStroke = "#b45309";
+  const dimLineWidth = 2.5;
+  const dimFontSize = Math.max(12, Math.round(height / 60));
 
   return (
     <figure className="min-w-0">
@@ -56,10 +67,60 @@ export default function SheetMap({ sheet, width, height, mat }) {
             )}
           </g>
         ))}
+
+        {showFootprint && (
+          <g opacity={footprintOpacity}>
+            {/* Cabinet footprint outline */}
+            <rect
+              x="20"
+              y="20"
+              width={cabinetW}
+              height={cabinetD}
+              fill="none"
+              stroke={footprintStroke}
+              strokeWidth="4"
+              strokeDasharray="12 8"
+            />
+
+            {/* Width dimension line (top) */}
+            <line x1="20" y1="8" x2={20 + cabinetW} y2="8" stroke={dimLineStroke} strokeWidth={dimLineWidth} />
+            <line x1="20" y1="2" x2="20" y2="14" stroke={dimLineStroke} strokeWidth={dimLineWidth} />
+            <line x1={20 + cabinetW} y1="2" x2={20 + cabinetW} y2="14" stroke={dimLineStroke} strokeWidth={dimLineWidth} />
+            <text
+              x={20 + cabinetW / 2}
+              y="-4"
+              fontSize={dimFontSize}
+              fill={dimLineStroke}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontWeight="bold"
+            >
+              W: {cabinetW}mm
+            </text>
+
+            {/* Depth dimension line (left) */}
+            <line x1="-8" y1="20" x2="-8" y2={20 + cabinetD} stroke={dimLineStroke} strokeWidth={dimLineWidth} />
+            <line x1="-14" y1="20" x2="-2" y2="20" stroke={dimLineStroke} strokeWidth={dimLineWidth} />
+            <line x1="-14" y1={20 + cabinetD} x2="-2" y2={20 + cabinetD} stroke={dimLineStroke} strokeWidth={dimLineWidth} />
+            <text
+              x="-22"
+              y={20 + cabinetD / 2}
+              fontSize={dimFontSize}
+              fill={dimLineStroke}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontWeight="bold"
+                   transform={`rotate(-90 -22 ${20 + cabinetD / 2})`}
+            >
+              D: {cabinetD}mm
+            </text>
+          </g>
+        )}
       </svg>
       <figcaption className="mt-1 flex items-center justify-between text-[11px] text-ink-2">
         <span>Sheet {sheet.index}</span>
         <span className="font-mono">{sheet.pieces.length} pcs</span>
+        {showFootprint && <span className="text-amber">Cabinet footprint shown</span>}
       </figcaption>
     </figure>
   );

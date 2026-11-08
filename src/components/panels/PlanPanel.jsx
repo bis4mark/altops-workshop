@@ -150,6 +150,8 @@ export default function PlanPanel({ j, patch, setTab }) {
                           mat={b.mat}
                           width={plan.sheet ? plan.sheet.w : 2440}
                           height={plan.sheet ? plan.sheet.h : 1220}
+                          cabinetW={j.W ? Math.round(j.W / 10) : null}
+                          cabinetD={j.D ? Math.round(j.D / 10) : null}
                         />
                       ))}
                     </div>
