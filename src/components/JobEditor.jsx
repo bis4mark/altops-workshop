@@ -81,7 +81,7 @@ export default function JobEditor({ job, settings, onSave, onPatch, onCancel, on
           />
         )}
         {tab === "estimate" && <EstimatePanel j={j} patch={patch} settings={settings} />}
-        {tab === "plan" && <PlanPanel j={j} patch={patch} />}
+        {tab === "plan" && <PlanPanel j={j} patch={patch} setTab={setTab} />}
         {tab === "preview" && <PreviewPanel j={j} patch={patch} />}
         {tab === "drawings" && <DrawingsPanel j={j} patch={patch} />}
         {tab === "photos" && <PhotosPanel j={j} setJ={setJ} setLightbox={setLightbox} />}

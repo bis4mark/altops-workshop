@@ -8,7 +8,7 @@ const itd = "border-b border-line px-2.5 py-1.5 text-center text-xs";
 
 const pct = (v) => `${Math.round((v || 0) * 100)}%`;
 
-export default function PlanPanel({ j, patch }) {
+export default function PlanPanel({ j, patch, setTab }) {
   const saved = j.plan;
   const [t, setT] = useState(saved ? saved.t : 18);
   const [shelves, setShelves] = useState(saved ? saved.shelves : 1);
