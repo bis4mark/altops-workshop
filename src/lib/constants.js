@@ -41,7 +41,7 @@ export const WOOD_TYPES = [
   { name: "Wawa", short: "WAW", tone: "#c8a56b", pricePerSheet: 220 },
   { name: "Sapele", short: "SAP", tone: "#6e3b2c", pricePerSheet: 460 },
   { name: "MDF Board", short: "MDF", tone: "#9a8c76", pricePerSheet: 180 },
-  { name: "Plywood", short: "PLY", tone: "#b99a6c", pricePerSheet: 150 },
+  { name: "Melamine Plywood", short: "MLP", tone: "#e0dcc7", pricePerSheet: 170 },
 ];
 export const woodByName = (name) => WOOD_TYPES.find((w) => w.name === name) || WOOD_TYPES[0];
 
