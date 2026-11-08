@@ -13,7 +13,9 @@ restores it, so a cleared browser does not lose the shop's records.
 - **Measure** — photograph the wood next to a reference object; the AI reads
   real dimensions off the photo.
 - **Estimate** — cabinet-type presets → a printable invoice.
-- **Plan** — outer size + shelves/doors → a cut list and sheet count.
+- **Plan** — outer size + shelves/doors → a cut list, sheet count, yield and a
+  to-scale layout of every sheet. Grain-critical panels (doors, sides, tops)
+  never get turned; sheet size and saw kerf are adjustable.
 - **Drawings** — printable technical sheets.
 - **3D** — native three.js preview with wood textures, shadows and hardware.
 

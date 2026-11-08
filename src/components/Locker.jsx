@@ -10,7 +10,10 @@ function cutListText(job, plan) {
   const rows = plan.parts.map(
     (p) => `  ${String(p.qty).padStart(2)} ×  ${String(p.L).padStart(5)} × ${String(p.Wd).padStart(4)} mm   ${p.name} (${p.mat})`,
   );
-  const boards = plan.boards.map((b) => `  ${b.count} × ${b.mat} sheet (2440×1220)`);
+  const size = plan.sheet ? `${plan.sheet.w}×${plan.sheet.h}` : "2440×1220";
+  const boards = plan.boards.map(
+    (b) => `  ${b.count} × ${b.mat} sheet (${size})${b.yield != null ? ` — ${Math.round(b.yield * 100)}% used` : ""}`,
+  );
   return [
     `ALTOPS FURNITURE ENTERPRISE — CUT LIST`,
     `${jobCode(job)}  ${job.title || "Untitled"}`,
