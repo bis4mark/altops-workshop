@@ -163,7 +163,7 @@ export default function EstimatePanel({ j, patch, settings }) {
         </button>
         <button
           onClick={() => patch({ estimate: estimate() })}
-          className="rounded-lg border border-amber px-4 py-2.5 font-semibold text-amber transition-colors active:scale-[0.97] hover:bg-amber/10"
+          className="rounded-lg border border-amber px-4 py-2.5 font-semibold text-amber-2 transition-colors active:scale-[0.97] hover:bg-amber/10"
         >
           Save estimate
         </button>
@@ -242,7 +242,7 @@ export default function EstimatePanel({ j, patch, settings }) {
           <div className="no-print mt-4 text-center">
             <button
               onClick={() => window.print()}
-              className="rounded-md bg-ink px-6 py-2.5 text-amber transition-[filter,transform] hover:brightness-125 active:scale-[0.97]"
+              className="rounded-md bg-ink px-6 py-2.5 text-canvas transition-[filter,transform] hover:brightness-125 active:scale-[0.97]"
             >
               Print / Save as PDF
             </button>

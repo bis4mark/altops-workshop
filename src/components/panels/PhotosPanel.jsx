@@ -27,7 +27,7 @@ export default function PhotosPanel({ j, setJ, setLightbox }) {
         <button
           onClick={() => fileRef.current && fileRef.current.click()}
           disabled={busy || photos.length >= 8}
-          className="text-[13px] font-semibold text-amber disabled:opacity-50"
+          className="text-[13px] font-semibold text-amber-2 disabled:opacity-50"
         >
           {busy ? "Adding…" : "+ Add photos"}
         </button>

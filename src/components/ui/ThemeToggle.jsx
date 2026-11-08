@@ -23,7 +23,7 @@ export default function ThemeToggle({ theme, onChange }) {
             title={label}
             onClick={() => onChange(key)}
             className={`grid h-7 w-7 place-items-center rounded transition-transform active:scale-[0.9] ${
-              on ? "bg-amber text-white" : "text-ink-3 hover:text-ink"
+              on ? "bg-amber-fill text-amber-on" : "text-ink-3 hover:text-ink"
             }`}
           >
             <Icon size={14} />

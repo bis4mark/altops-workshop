@@ -131,7 +131,7 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
             <button
               onClick={() => fileRef.current && fileRef.current.click()}
               disabled={busy}
-              className="flex-1 rounded-lg border border-amber p-3 font-semibold text-amber transition-colors active:scale-[0.97] hover:bg-amber/10 disabled:opacity-50"
+              className="flex-1 rounded-lg border border-amber p-3 font-semibold text-amber-2 transition-colors active:scale-[0.97] hover:bg-amber/10 disabled:opacity-50"
             >
               Upload photo (JPEG/PNG)
             </button>
@@ -210,14 +210,14 @@ export default function MeasurePanel({ j, patch, setLightbox, onUseDims }) {
                   </div>
                   <button
                     onClick={() => onUseDims(it)}
-                    className="mt-1 text-[11px] font-bold text-amber"
+                    className="mt-1 text-[11px] font-bold text-amber-2"
                   >
                     Use as job dimensions →
                   </button>
                 </div>
               ))}
               {m.result.recommended_product && (
-                <div className="mt-1 text-[11px] text-amber">
+                <div className="mt-1 text-[11px] text-amber-2">
                   Best for: {m.result.recommended_product}
                 </div>
               )}

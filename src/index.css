@@ -10,16 +10,21 @@
 
   --color-ink: #222222;
   --color-ink-2: #57534e;
-  --color-ink-3: #8b857c;
+  /* 4.6:1 on canvas — the muted tone has to stay legible at 10px. */
+  --color-ink-3: #74706a;
 
   --color-line: #e4e1da;
   --color-line-2: #d3cfc6;
 
   --color-amber: #d97706;
   --color-amber-2: #b45309;
+  /* amber-fill/on is the pair that carries text: a deeper amber holds white
+     labels at 5:1, and the dark theme flips to ink on the bright amber. */
+  --color-amber-fill: #b45309;
+  --color-amber-on: #ffffff;
 
-  --color-ok: #3f8a4e;
-  --color-warn: #d97706;
+  --color-ok: #377d45;
+  --color-warn: #b45309;
   --color-alert: #dc2626;
 
   /* charcoal sidebar surface */
@@ -47,13 +52,15 @@
 
     --color-ink: #ece8e1;
     --color-ink-2: #b0a99e;
-    --color-ink-3: #7d766b;
+    --color-ink-3: #8f887c;
 
     --color-line: #322f2b;
     --color-line-2: #423e39;
 
     --color-amber: #f59e0b;
     --color-amber-2: #d97706;
+    --color-amber-fill: #f59e0b;
+    --color-amber-on: #171614;
 
     --color-ok: #5bb06e;
     --color-warn: #f59e0b;
@@ -73,13 +80,15 @@
 
   --color-ink: #ece8e1;
   --color-ink-2: #b0a99e;
-  --color-ink-3: #7d766b;
+  --color-ink-3: #8f887c;
 
   --color-line: #322f2b;
   --color-line-2: #423e39;
 
   --color-amber: #f59e0b;
   --color-amber-2: #d97706;
+  --color-amber-fill: #f59e0b;
+  --color-amber-on: #171614;
 
   --color-ok: #5bb06e;
   --color-warn: #f59e0b;
@@ -122,7 +131,7 @@
            hover:border-line-2 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-40;
   }
   .btn-amber {
-    @apply border-amber bg-amber text-white transition-[filter] hover:brightness-105;
+    @apply border-amber-fill bg-amber-fill text-amber-on transition-[filter] hover:brightness-105;
   }
   .field {
     @apply w-full rounded-md border border-line bg-surface px-2.5 py-1.5 text-sm text-ink

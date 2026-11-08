@@ -18,7 +18,7 @@ export default function ToastHost({ toasts, onDismiss }) {
                 t.action.onClick();
                 onDismiss(t.id);
               }}
-              className="font-semibold text-amber hover:underline"
+              className="font-semibold text-amber-2 hover:underline"
             >
               {t.action.label}
             </button>

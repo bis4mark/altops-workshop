@@ -70,7 +70,7 @@ export default function DetailsPanel({ j, up }) {
       <button
         type="button"
         onClick={() => setMore((v) => !v)}
-        className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-amber"
+        className="mt-4 inline-flex items-center gap-1 text-[13px] font-semibold text-amber-2"
       >
         <ChevronRight size={14} className={`transition-transform ${more ? "rotate-90" : ""}`} />
         {more ? "Fewer options" : "More options"}

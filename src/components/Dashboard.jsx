@@ -42,7 +42,7 @@ export default function Dashboard({ jobs, lumber, capacity, onNewJob, onClockIn,
       animate="show"
       variants={{ show: { transition: { staggerChildren: 0.06 } } }}
     >
-      <motion.div variants={card}><Stat label="Active builds" value={active.length} hint={`${ready} ready to deliver`} icon={Hammer} tone="text-amber" /></motion.div>
+      <motion.div variants={card}><Stat label="Active builds" value={active.length} hint={`${ready} ready to deliver`} icon={Hammer} tone="text-amber-2" /></motion.div>
       <motion.div variants={card}><Stat label="On the books" value={jobs.length} hint="commissions tracked" icon={ClipboardList} /></motion.div>
       <motion.div variants={card}><Stat label="Balance due" value={money(outstanding)} hint="across open jobs" icon={Package} /></motion.div>
       <motion.div variants={card} className="card flex items-center justify-center p-4">

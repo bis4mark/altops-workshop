@@ -27,7 +27,7 @@ function Panel({ business, view, onView, onSettings, collapsible }) {
       }`}
     >
       <div className="flex items-center gap-2 border-b border-shell-line px-3.5 py-4">
-        <span className="grid h-7 w-7 shrink-0 place-items-center rounded bg-amber font-mono text-xs font-bold text-white">
+        <span className="grid h-7 w-7 shrink-0 place-items-center rounded bg-amber-fill font-mono text-xs font-bold text-amber-on">
           AF
         </span>
         <div className="min-w-0 leading-tight opacity-0 transition-opacity duration-150 group-hover/side:opacity-100">
