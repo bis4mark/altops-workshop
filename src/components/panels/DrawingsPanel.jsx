@@ -36,7 +36,12 @@ function OrthoView({ title, view }) {
   return (
     <div className="rounded-lg border border-line bg-white p-2">
       <div className="mb-1 text-xs font-semibold text-ink-2">{title}</div>
-      <svg viewBox={vb} width="100%" height="260" preserveAspectRatio="xMidYMid meet">
+      {/* height auto: a 3 m table and a 600 mm cabinet both fill their card
+          instead of floating in a fixed 260 px band */}
+      <svg viewBox={vb} className="h-auto w-full" preserveAspectRatio="xMidYMid meet">
+        {/* Pass 1 — opaque surfaces, painted far to near so a door covers the
+            shelf behind it. Pass 2 — hidden edges drawn dashed on top, the way
+            a technical drawing shows what is inside. */}
         {view.rects.map((r) => (
           <g key={r.id}>
             <rect
@@ -45,10 +50,10 @@ function OrthoView({ title, view }) {
               width={r.w}
               height={r.h}
               fill={r.material === "hardware" ? "#c9c9c9" : "#e9ddc8"}
-              stroke={r.material === "hardware" ? "#6b6b6b" : "#5a4a33"}
+              stroke={r.hidden ? "none" : r.material === "hardware" ? "#6b6b6b" : "#5a4a33"}
               strokeWidth={r.material === "hardware" ? 2 : 2.5}
             />
-            {r.w > 100 && r.h > 50 && (
+            {!r.hidden && r.w > 100 && r.h > 50 && (
               <text
                 x={r.x + r.w / 2}
                 y={h - r.y - r.h / 2}
@@ -63,6 +68,23 @@ function OrthoView({ title, view }) {
             )}
           </g>
         ))}
+
+        {view.rects
+          .filter((r) => r.hidden)
+          .map((r) => (
+            <rect
+              key={`h-${r.id}`}
+              x={r.x}
+              y={h - r.y - r.h}
+              width={r.w}
+              height={r.h}
+              fill="none"
+              stroke="#8b857c"
+              strokeWidth={2}
+              strokeDasharray="9 7"
+            />
+          ))}
+
         <Dim dim={view.dimH} />
         <Dim dim={view.dimV} />
       </svg>
@@ -114,12 +136,17 @@ export default function DrawingsPanel({ j }) {
 
   return (
     <div className="drawing-sheet">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <OrthoView title="Front view" view={dwg.front} />
-        <OrthoView title="Side view" view={dwg.side} />
-        <OrthoView title="Top view" view={dwg.top} />
+      <div className="grid grid-cols-1 items-start gap-3 sm:grid-cols-2">
+        <OrthoView title="Front elevation" view={dwg.front} />
+        <OrthoView title="Side elevation" view={dwg.side} />
+        <OrthoView title="Plan (top)" view={dwg.top} />
         <ExplodedView exploded={dwg.exploded} />
       </div>
+
+      <p className="mt-2 text-[11px] text-ink-2">
+        Solid edges are visible from that direction; dashed edges are hidden behind a nearer panel.
+        All three views are orthographic, so parallel edges stay parallel.
+      </p>
 
       <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 rounded-lg border border-line p-3 text-[13px] sm:grid-cols-4">
         <div>

@@ -3,61 +3,67 @@
    assembly diagram. Pure geometry — no SVG/DOM here, see DrawingsPanel. */
 import { extent, explodedPosition } from "./geometry3d";
 
-function boxToRect(box, axisA, axisB) {
-  const aHalf = extent(box, axisA) / 2;
-  const bHalf = extent(box, axisB) / 2;
-  return {
-    id: box.id,
-    label: box.name,
-    material: box.material,
-    x: box[axisA] - aHalf,
-    y: box[axisB] - bHalf,
-    w: aHalf * 2,
-    h: bHalf * 2,
-  };
-}
+const EPS = 0.5; // a panel flush against another still counts as covered
 
-function project(boxes, axisA, axisB, boundsW, boundsH) {
-  return {
-    rects: boxes.map((b) => boxToRect(b, axisA, axisB)),
-    bounds: { minX: 0, maxX: boundsW, minY: 0, maxY: boundsH },
-  };
+const overlaps = (o, r) =>
+  o.x < r.x + r.w - EPS && r.x < o.x + o.w - EPS && o.y < r.y + r.h - EPS && r.y < o.y + o.h - EPS;
+
+/**
+ * One orthographic view.
+ *
+ * Every box projects to a rectangle, so the drawing is only correct if the
+ * rectangles are painted far-to-near: a door has to cover the shelf behind it,
+ * not the other way round. Each rect also records whether something nearer
+ * overlaps it, which the renderer draws as a hidden (dashed) edge.
+ */
+function buildView(boxes, { a, b, depth, shiftA = 0, shiftB = 0, boundsW, boundsH }) {
+  const rects = boxes.map((box) => {
+    const aHalf = extent(box, a) / 2;
+    const bHalf = extent(box, b) / 2;
+    const dHalf = extent(box, depth) / 2;
+    return {
+      id: box.id,
+      label: box.name,
+      material: box.material,
+      x: box[a] + shiftA - aHalf,
+      y: box[b] + shiftB - bHalf,
+      w: aHalf * 2,
+      h: bHalf * 2,
+      near: box[depth] + dHalf,
+      far: box[depth] - dHalf,
+    };
+  });
+
+  rects.sort((p, q) => p.near - q.near || p.far - q.far);
+  rects.forEach((rect) => {
+    // Only a panel strictly nearer along the view axis can hide this one. Parts
+    // sharing a depth (a leg and the apron beside it) sit side by side, not in
+    // front of each other, so they must not erase one another.
+    rect.hidden = rects.some((other) => other !== rect && other.near > rect.near + EPS && overlaps(other, rect));
+  });
+
+  return { rects, bounds: { minX: 0, maxX: boundsW, minY: 0, maxY: boundsH } };
 }
 
 export function projectFront(boxes, job) {
   const W = +job.W;
   const H = +job.H;
-  return project(
-    boxes.map((b) => ({ ...b, x: b.x + W / 2 })),
-    "x",
-    "y",
-    W,
-    H
-  );
+  // looking from +z, so z is the depth axis
+  return buildView(boxes, { a: "x", b: "y", depth: "z", shiftA: W / 2, boundsW: W, boundsH: H });
 }
 
 export function projectSide(boxes, job) {
   const D = +job.D || (job.type === "Table" ? 600 : 570);
   const H = +job.H;
-  return project(
-    boxes.map((b) => ({ ...b, z: b.z + D / 2 })),
-    "z",
-    "y",
-    D,
-    H
-  );
+  // looking from +x, so x is the depth axis
+  return buildView(boxes, { a: "z", b: "y", depth: "x", shiftA: D / 2, boundsW: D, boundsH: H });
 }
 
 export function projectTop(boxes, job) {
   const W = +job.W;
   const D = +job.D || (job.type === "Table" ? 600 : 570);
-  return project(
-    boxes.map((b) => ({ ...b, x: b.x + W / 2, z: b.z + D / 2 })),
-    "x",
-    "z",
-    W,
-    D
-  );
+  // looking down from +y, so y is the depth axis
+  return buildView(boxes, { a: "x", b: "z", depth: "y", shiftA: W / 2, shiftB: D / 2, boundsW: W, boundsH: D });
 }
 
 const COS30 = Math.cos(Math.PI / 6);
